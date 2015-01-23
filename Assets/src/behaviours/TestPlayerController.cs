@@ -20,10 +20,17 @@ public class TestPlayerController : MonoBehaviour {
     float desiredSpeedFactor = 0.0f;
     #endregion
 
+    GameObject SpriterObject = null;
 
 
     void Start () {
         inputDevice = InputManager.ActiveDevice;//Devices[playerIndex];
+
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag("SpriterObject"))
+                SpriterObject = child.gameObject;
+        }
 	}
 	
 	void Update () {
@@ -49,7 +56,12 @@ public class TestPlayerController : MonoBehaviour {
             // Cache results of cross product and dot product for later use.
             float DotProd = Vector3.Dot(transform.forward, desiredHeading);
             Vector3 CrossProd = Vector3.Cross(transform.forward, desiredHeading);
+            Debug.Log(DotProd.ToString());
 
+            // Send a flip message to the billboard.
+            SpriterObject.SendMessage(
+                "FlipBillboard", Vector3.Dot(Vector3.right, desiredHeading) < 0.0f || Vector3.Dot(Vector3.right, transform.forward) < 0.0f
+            );
 
             float RotationSpeedScale = Mathf.Abs(((DotProd * _invPI) - 0.5f) * 2.0f) * RotationSpeed;
 
