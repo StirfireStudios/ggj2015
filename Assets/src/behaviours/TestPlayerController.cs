@@ -56,12 +56,6 @@ public class TestPlayerController : MonoBehaviour {
             // Cache results of cross product and dot product for later use.
             float DotProd = Vector3.Dot(transform.forward, desiredHeading);
             Vector3 CrossProd = Vector3.Cross(transform.forward, desiredHeading);
-            Debug.Log(DotProd.ToString());
-
-            // Send a flip message to the billboard.
-            SpriterObject.SendMessage(
-                "FlipBillboard", Vector3.Dot(Vector3.right, desiredHeading) < 0.0f || Vector3.Dot(Vector3.right, transform.forward) < 0.0f
-            );
 
             float RotationSpeedScale = Mathf.Abs(((DotProd * _invPI) - 0.5f) * 2.0f) * RotationSpeed;
 
@@ -80,12 +74,18 @@ public class TestPlayerController : MonoBehaviour {
 
             if (desiredSpeedFactor > 0.05f)
             {
+                // Send a flip message to the billboard, but only if we're
+                // moving substantially in the X axis.
+                bool bFlip = Vector3.Dot(Vector3.right, desiredHeading) < 0.0f || Vector3.Dot(Vector3.right, transform.forward) < 0.0f;
+                if (Mathf.Abs(desiredHeading.x) > 0.10f)
+                    SpriterObject.SendMessage("FlipBillboard", bFlip);
+
                 // Figure out how to rotate the character.
                 if (CrossProd.y > 0.0f)
                 {
                     transform.Rotate(Vector3.up * (Time.deltaTime + 4) * RotationSpeedScale, Space.World);
                 }
-                else if (CrossProd.y < 0.0f)
+                else
                 {
                     transform.Rotate(Vector3.up * (Time.deltaTime + -4) * RotationSpeedScale, Space.World);
                 }
