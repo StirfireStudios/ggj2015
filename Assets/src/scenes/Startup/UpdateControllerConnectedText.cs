@@ -43,38 +43,32 @@ public class UpdateControllerConnectedText : MonoBehaviour
         }
     }
 
-    public void SetCharacterPairing(System.Collections.Generic.Dictionary<string, object> data)
+	public void SetCharacterPairing(System.Collections.Generic.Dictionary<string, object> data)
     {
         InputDevice device = (InputDevice)data["controller"];
-        string name = (string)data["character"];
-        characterMapping[device] = name;
+		GGJ.Data.CharacterInfo.Type character = (GGJ.Data.CharacterInfo.Type)data["character"];
 
-        gc.EnqueueMapping(device, name);
-
+		gc.SetCharacterForDevice (device, character);
         CheckReadyState();
     }
 
     public void RemoveCharacterForDevice(InputDevice device)
     {
-        if (characterMapping.ContainsKey(device))
-        {
-            characterMapping.Remove(device);
-        }
+		gc.RemoveCharacterForDevice(device);
         CheckReadyState();
     }
 
     private void CheckReadyState()
     {
-        if (InputManager.Devices.Count > 0)
-            if (characterMapping.Count == InputManager.Devices.Count)
-            {
-                startTime = Time.time + 5.0f;
-            }
-            else
-            {
-                startTime = -1.0f;
-                SetControllerText(InputManager.Devices.Count);
-            }
+		if ((gc.NumberOfPlayers == InputManager.Devices.Count) && (gc.NumberOfPlayers > 0))
+		{
+			startTime = Time.time + 5.0f;
+		}
+			else
+		{
+			startTime = -1.0f;
+			SetControllerText(InputManager.Devices.Count);
+		}
     }
 
     private void SetControllerText(int connectedDevices)
@@ -95,5 +89,4 @@ public class UpdateControllerConnectedText : MonoBehaviour
 
     private float startTime = -1.0f;
     private float lastTextUpdate = -1.0f;
-    private System.Collections.Generic.Dictionary<InputDevice, string> characterMapping = new System.Collections.Generic.Dictionary<InputDevice, string>();
 }
