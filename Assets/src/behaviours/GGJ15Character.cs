@@ -22,7 +22,7 @@ public class GGJ15Character : MonoBehaviour {
     /**
      * Rotation speed factor.
      */
-    public float RotationSpeed = 3.0f;   
+    public float RotationSpeed = 3.0f;
 
     /**
      * Whether to draw debug lines.
@@ -39,7 +39,7 @@ public class GGJ15Character : MonoBehaviour {
     [HideInInspector]
     public float DesiredSpeedFactor = 0.0f;
     #endregion
-    
+
     const float _minSpeed = 0.05f;
     const float _invPI = 1.0f / Mathf.PI;
 
@@ -53,13 +53,18 @@ public class GGJ15Character : MonoBehaviour {
             {
                 if (child.CompareTag(SPRITEROBJECT_TAG))
                     SpriterObject = child.gameObject;
-            }    
+            }
     }
 
     /**
      * Every tick.
      */
     public void Update() {
+
+        GGJ.Mob mob = this.gameObject.GetComponentInChildren<GGJ.Character>();
+        if (mob == null) {
+            mob = this.gameObject.GetComponentInChildren<GGJ.Monster>();
+        }
 
         /**
          * Cache the results of the cross and dot products of the forward
@@ -68,7 +73,7 @@ public class GGJ15Character : MonoBehaviour {
         float DotProd = Vector3.Dot(transform.forward, DesiredHeading);
         Vector3 CrossProd = Vector3.Cross(transform.forward, DesiredHeading);
 
-        /** 
+        /**
          * Calculate rotation speed scale.
          */
         float RotationSpeedScale = Mathf.Abs(((DotProd * _invPI) - 0.5f) * 2.0f) * RotationSpeed;
@@ -113,7 +118,7 @@ public class GGJ15Character : MonoBehaviour {
             // Process animation.
             if (SpriterObject != null)
             {
-                SpriterObject.SendMessage("SetState", GGJ.MobState.Move);
+                mob.SetState(GGJ.MobState.Move);
 
                 if (Mathf.Abs(DesiredHeading.x) > 0.10f)
                 {
@@ -130,7 +135,7 @@ public class GGJ15Character : MonoBehaviour {
 
             if (SpriterObject != null)
             {
-                SpriterObject.SendMessage("SetState", GGJ.MobState.Static);
+                mob.SetState(GGJ.MobState.Static);
             }
         }
     }

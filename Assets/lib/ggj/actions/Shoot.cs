@@ -46,7 +46,7 @@ namespace GGJ.Actions {
         public void apply() {
             var character = N.Meta._(this).cmp<Character>();
             if (character.box == null) {
-                if (character.SetState(MobState.Attack, true)) {
+                if (character.RequestState(MobState.Attack, true)) {
                     _active = true;
                     _idle = 0f;
                     this._shoot();
