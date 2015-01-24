@@ -15,11 +15,6 @@ public class UpdateControllerConnectedText : MonoBehaviour
 
     GGJ.GameConfig gc = GGJ.GameConfig.Instance;
 
-    public void Start() {        
-
-
-    }
-
     public void Update()
     {
         if (startTime < 0.0f)
@@ -58,6 +53,18 @@ public class UpdateControllerConnectedText : MonoBehaviour
         CheckReadyState();
     }
 
+    public void OnKeyboardEnabled()
+    {
+        keyboardEnabled = true;
+        SetControllerText(InputManager.Devices.Count);
+    }
+
+    public void OnKeyboardDisabled()
+    {
+        keyboardEnabled = false;
+        SetControllerText(InputManager.Devices.Count);
+    }
+
     private void CheckReadyState()
     {
 		if ((gc.NumberOfPlayers == InputManager.Devices.Count) && (gc.NumberOfPlayers > 0))
@@ -73,20 +80,33 @@ public class UpdateControllerConnectedText : MonoBehaviour
 
     private void SetControllerText(int connectedDevices)
     {
-        if (connectedDevices == 0)
+        string text = "";
+
+        if (connectedDevices == 1)
         {
-            this.GetComponent<Text>().text = "No Controllers Found";
+            text = "No Controllers Found";
         }
-        else if (connectedDevices == 1)
+        else if (connectedDevices == 2)
         {
-            this.GetComponent<Text>().text = "1 Controller Found";
+            text = "1 Controller Found";
         }
-        else if (connectedDevices > 1)
+        else if (connectedDevices > 2)
         {
-            this.GetComponent<Text>().text = connectedDevices + " Controllers Found";
+            text = connectedDevices - 1 + " Controllers Found";
         }
+        if (keyboardEnabled)
+        {
+            text += "\nTo disable keyboard press the space key";
+        }
+        else
+        {
+            text += "\nTo enable keyboard press 'f' or the enter key";
+        }
+
+        this.GetComponent<Text>().text = text;
     }
 
     private float startTime = -1.0f;
     private float lastTextUpdate = -1.0f;
+    private bool keyboardEnabled = false;
 }
