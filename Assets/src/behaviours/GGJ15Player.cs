@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using InControl;
+using N;
 
 /**
  * A player.
@@ -55,6 +56,19 @@ public class GGJ15Player : GGJ15Character {
         }
 
         base.Update();
+
+        // TODO: Fold into controller
+        debugKeys();
     }
 
+    /**
+     * Simplistic key binding for testing
+     * TODO: Replace this with proper controller binding in Update()
+     */
+    private void debugKeys() {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            var jumper = gameObject.GetComponent<GGJ.Actions.Jump>();
+            jumper.apply();
+        };
+    }
 }

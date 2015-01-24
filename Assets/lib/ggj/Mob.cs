@@ -20,17 +20,31 @@ namespace GGJ {
     /// Static collection of all know character instances
     public static List<Mob> All = new List<Mob>();
 
-    /// State external and internal
-		public MobState state = MobState.Static;
-		protected MobState _state = MobState.None;
+    /// Are states currently locked for some reason?
+    public bool allow_state_change;
 
-      // Public setter so we can just use SendMessage / BroadcastMessage
-        public void SetState(MobState newstate) {
-            state = newstate;
+    /// State external and internal
+    protected MobState actual_state = MobState.Static;
+    protected MobState _state = MobState.None;
+    public MobState state {
+        get { return actual_state; }
+        set {
+            if (allow_state_change) {
+                if (!((value == MobState.Static) && (_state == MobState.Static))) {
+                    actual_state = value;
+                }
+            }
         }
+    }
+
+    // Public setter so we can just use SendMessage / BroadcastMessage
+    public void SetState(MobState newstate) {
+      state = newstate;
+    }
 
     void Start () {
-			Mob.All.Add(this);
+      Mob.All.Add(this);
+      allow_state_change = true;
     }
 
     void Update () {
@@ -42,14 +56,14 @@ namespace GGJ {
 
     /// Check if the state is updated or not
     protected bool _updated() {
-			if (state == MobState.None) { return false; }
-      return state != _state;
+      if (state == MobState.None) { return false; }
+      return (state != MobState.None);
     }
 
     /// Mark the state as updated
     protected void _update() {
-      _state = state;
-      state = MobState.None;
+      _state = actual_state;
+      actual_state = MobState.None;
     }
 
     /// Return the state id for the given state code

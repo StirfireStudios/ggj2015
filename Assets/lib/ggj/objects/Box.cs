@@ -16,7 +16,7 @@ namespace GGJ {
       var character = N.Meta._(collision.gameObject).cmp<Character>(true);
       if (character != null) {
         character.box = this.gameObject;
-        this.active = false;
+        this.gameObject.SetActive(false);
       }
     }
   }
