@@ -29,7 +29,6 @@ namespace GGJ {
 		void Update () {
 			if (_updated()) {
 				_update();
-				N.Console.log(_stateId(_state));
 				N.Meta._(gameObject).cmp<Animator>().Play(_stateId(_state));
 			}
 		}
@@ -42,7 +41,6 @@ namespace GGJ {
 
 		/// Mark the state as updated
 		new protected void _update() {
-			N.Console.log("Updating!");
 			_state = state;
 			_box = box;
       state = MobState.None;
