@@ -30,35 +30,35 @@ namespace GGJ.Scenes.Characters {
 		/// Display the static animation for all characters
 		public void AnimateStatic() {
 			for (var i = 0; i < Character.All.Count; ++i) {
-				Character.All[i].state = MobState.Static;
+				Character.All[i].SetState(MobState.Static);
 			}
 		}
 
 		/// Display the move animation for all characters
 		public void AnimateMove() {
 			for (var i = 0; i < Character.All.Count; ++i) {
-				Character.All[i].state = MobState.Move;
+				Character.All[i].SetState(MobState.Move);
 			}
 		}
 
 		/// Display the attack animation for all characters
 		public void AnimateAttack() {
 			for (var i = 0; i < Character.All.Count; ++i) {
-				Character.All[i].state = MobState.Attack;
+				Character.All[i].SetState(MobState.Attack);
 			}
 		}
 
 		/// Display the jump animation for all characters
 		public void AnimateJump() {
 			for (var i = 0; i < Character.All.Count; ++i) {
-				Character.All[i].state = MobState.Jump;
+				Character.All[i].SetState(MobState.Jump);
 			}
 		}
 
 		/// Display the death animation for all characters
 		public void AnimateDead() {
 			for (var i = 0; i < Character.All.Count; ++i) {
-				Character.All[i].state = MobState.Dead;
+				Character.All[i].SetState(MobState.Dead);
 			}
 		}
 

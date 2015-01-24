@@ -4,82 +4,141 @@ using System.Collections.Generic;
 
 namespace GGJ {
 
-  /// The animation states for characters
-  public enum MobState {
-    Static,
-    Move,
-    Attack,
-    Jump,
-    Dead,
-    None
-  }
+    /// The animation states for characters
+    public enum MobState {
+        Static,
+        Move,
+        Attack,
+        Jump,
+        Dead,
+        None
+    }
 
-  /// Common behaviours and data for all mobile types
-  public class Mob : MonoBehaviour {
+    /// A state manager for mobs
+    public class MobStateBucket {
 
-    /// Static collection of all know character instances
-    public static List<Mob> All = new List<Mob>();
+        /** The actual current playing state, or None */
+        private MobState _state;
 
-    /// Are states currently locked for some reason?
-    public bool allow_state_change;
+        /** The requested state, which is currently pending, or None */
+        private MobState _requested;
 
-    /// State external and internal
-    protected MobState actual_state = MobState.Static;
-    protected MobState _state = MobState.None;
-    public MobState state {
-        get { return actual_state; }
-        set {
-            if (allow_state_change) {
-                if (!((value == MobState.Static) && (_state == MobState.Static))) {
-                    actual_state = value;
-                }
+        /** Was the last state an wait-for-animation request? */
+        private bool _waiting;
+
+        /** The current actual state */
+        public MobState state {
+            get { return _state; }
+        }
+
+        /**
+        * Attempt to request a new state
+        *
+        * This will only work if there is no pending state, and if the
+        * previously requested animation is completed
+        */
+        public bool request(MobState state, bool wait) {
+            if (_waiting) {
+                return false;
             }
+            if (_requested != MobState.None) {
+                return false;
+            }
+            if (state == _state) {
+                return false;
+            }
+            _requested = state;
+            _waiting = wait;
+            return true;
+        }
+
+        /** Request shortcut for normal ops */
+        public bool request(MobState state) {
+            return this.request(state, false);
+        }
+
+        /** Reset the state */
+        public void reset() {
+            this._state = MobState.None;
+            this._requested = MobState.None;
+            this._waiting = false;
+        }
+
+        /** Notify the state object that a waiting request is complete */
+        public void ready() {
+            _waiting = false;
+        }
+
+        /** Return the next state to apply, or MobState.None */
+        public MobState next() {
+            if (_requested != MobState.None) {
+                _state = _requested;
+                _requested = MobState.None;
+                return _state;
+            }
+            return MobState.None;
+        }
+
+        public MobStateBucket() {
+            this.reset();
         }
     }
 
-    // Public setter so we can just use SendMessage / BroadcastMessage
-    public void SetState(MobState newstate) {
-      state = newstate;
-    }
+    /// Common behaviours and data for all mobile types
+    public class Mob : MonoBehaviour {
 
-    void Start () {
-      Mob.All.Add(this);
-      allow_state_change = true;
-    }
+        /** State manager */
+        protected MobStateBucket _state = new MobStateBucket();
 
-    void Update () {
-      if (_updated()) {
-        _update();
-        N.Meta._(gameObject).cmp<Animator>().Play(_stateId(state));
-      }
-    }
+        /**
+         * Public setter so we can just use SendMessage / BroadcastMessage
+         */
+        public bool SetState(MobState newstate) {
+            return _state.request(newstate);
+        }
 
-    /// Check if the state is updated or not
-    protected bool _updated() {
-      if (state == MobState.None) { return false; }
-      return (state != MobState.None);
-    }
+        /**
+        * Public setter so we can just use SendMessage / BroadcastMessage
+        */
+        public bool SetState(MobState newstate, bool wait) {
+            return _state.request(newstate, wait);
+        }
 
-    /// Mark the state as updated
-    protected void _update() {
-      _state = actual_state;
-      actual_state = MobState.None;
-    }
+        /** Finished with a state we're waiting for animation on */
+        public void FinishedState() {
+            this.FinishedState(MobState.Static);
+        }
 
-    /// Return the state id for the given state code
-    protected string _stateId(MobState state) {
-      switch (state) {
-        case MobState.Static:
-        case MobState.None:
-        return "Static";
-        case MobState.Move:
-        return "Walk";
-        case MobState.Attack:
-        return "Attack";
-        case MobState.Dead:
-        return "Death";
-      }
-      return "Static";
+        /** Finished with a state we're waiting for animation on */
+        public void FinishedState(MobState next) {
+            _state.ready();
+            _state.request(next);
+        }
+
+        void Start () {
+        }
+
+        void Update () {
+            var state = this._state.next();
+            if (state != MobState.None) {
+                N.Meta._(gameObject).cmp<Animator>().Play(_stateId(state));
+            }
+        }
+
+        /// Return the state id for the given state code
+        protected string _stateId(MobState state) {
+          switch (state) {
+            case MobState.Static:
+            case MobState.None:
+                return "Idle";
+            case MobState.Move:
+                return "Walk";
+            case MobState.Attack:
+                return "Bite";
+            case MobState.Dead:
+                return "Death";
+          }
+          return "Idle";
+        }
     }
-  }
 }

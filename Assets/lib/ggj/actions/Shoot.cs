@@ -8,7 +8,7 @@ namespace GGJ.Actions {
     public class Shoot : MonoBehaviour {
 
         /** Is this component currently active? */
-        private bool _active;
+        public bool _active;
 
         /** How long has animation been idle for? */
         private float _idle;
@@ -22,6 +22,7 @@ namespace GGJ.Actions {
         /** Disable shooting explicitly */
         public void Stop() {
             _active = false;
+            _idle = 0;
         }
 
         public void Start() {
@@ -31,12 +32,12 @@ namespace GGJ.Actions {
 
         public void Update() {
             var anim = N.Meta._(this).cmp<Animator>();
-            if (_active && !anim.IsInTransition(0)) {
+            if (_active && (!anim.IsInTransition(0))) {
                 _idle += Time.deltaTime;
                 if (_idle > this._threshold) {
                     _active = false;
                     var character = N.Meta._(this).cmp<Character>();
-                    character.allow_state_change = true;
+                    character.FinishedState();
                 }
             }
         }
@@ -44,22 +45,25 @@ namespace GGJ.Actions {
         /** Trigger this effect on the target */
         public void apply() {
             var character = N.Meta._(this).cmp<Character>();
-            if ((character.box == null) && (character.allow_state_change)) {
-                character.state = MobState.Attack;
-                character.allow_state_change = false;
-                _active = true;
-                _idle = 0f;
-
-                // Create a new bullet in the direction of the player
-                var force = new Vector3(100, 5, 0);
-                var instance = UnityEngine.Object.Instantiate(_bulletFactory) as GameObject;
-                var pos = this.gameObject.transform.position;
-                pos.x += 5;
-                pos.y += 5;
-                instance.transform.position = pos;
-                var rb = N.Meta._(instance).cmp<Rigidbody>();
-                rb.AddForce(force);
+            if (character.box == null) {
+                if (character.SetState(MobState.Attack, true)) {
+                    _active = true;
+                    _idle = 0f;
+                    this._shoot();
+                }
             }
+        }
+
+        /** Shoot a bullet from this user in the right direction, etc */
+        private void _shoot() {
+            var force = new Vector3(100, 5, 0);
+            var instance = UnityEngine.Object.Instantiate(_bulletFactory) as GameObject;
+            var pos = this.gameObject.transform.position;
+            pos.x += 5;
+            pos.y += 5;
+            instance.transform.position = pos;
+            var rb = N.Meta._(instance).cmp<Rigidbody>();
+            rb.AddForce(force);
         }
     }
 }
