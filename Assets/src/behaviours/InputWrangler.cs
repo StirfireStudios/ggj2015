@@ -5,10 +5,12 @@ using InControl;
 public class InputWrangler : MonoBehaviour {
 
     int NumDevices = 0;
-    
+
+    GGJ.GameConfig gc = GGJ.GameConfig.Instance;
+
 	// Use this for initialization
 	void Start () {
-	
+        gc.DebugMeh();
 	}
 	
 	// Update is called once per frame
