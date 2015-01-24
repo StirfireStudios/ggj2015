@@ -34,7 +34,6 @@ namespace GGJ.Actions {
             if (_active && !anim.IsInTransition(0)) {
                 _idle += Time.deltaTime;
                 if (_idle > this._threshold) {
-                    N.Console.log("Probably finished animation");
                     _active = false;
                     var character = N.Meta._(this).cmp<Character>();
                     character.allow_state_change = true;
@@ -52,13 +51,14 @@ namespace GGJ.Actions {
                 _idle = 0f;
 
                 // Create a new bullet in the direction of the player
-                var force = new Vector3(10, 5, 0);
+                var force = new Vector3(100, 5, 0);
                 var instance = UnityEngine.Object.Instantiate(_bulletFactory) as GameObject;
                 var pos = this.gameObject.transform.position;
-                pos.x += 10;
+                pos.x += 5;
+                pos.y += 5;
                 instance.transform.position = pos;
-                //var rb = N.Meta._(instance).cmp<Rigidbody>();
-                //rb.AddForce(force);
+                var rb = N.Meta._(instance).cmp<Rigidbody>();
+                rb.AddForce(force);
             }
         }
     }
