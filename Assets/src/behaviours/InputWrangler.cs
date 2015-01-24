@@ -15,6 +15,6 @@ public class InputWrangler : MonoBehaviour {
 	void Update () {
 	    NumDevices = InputManager.Devices.Count;
 
-        Debug.Log(string.Format("{0} devices.", NumDevices));
+//Debug.Log(string.Format("{0} devices.", NumDevices));
 	}
 }
