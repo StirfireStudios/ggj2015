@@ -11,6 +11,12 @@ namespace GGJ {
         /** The threshold of all the things */
         public float threshold = 3f;
 
+        /** Vertical offset for throws */
+        public float offset_up = 12f;
+
+        /** Force to apply to self on throw */
+        public float force_up = 1000f;
+
         void Start () {
         }
 
@@ -27,7 +33,6 @@ namespace GGJ {
             else {
                 var rb = N.Meta._(this).cmp<Rigidbody>();
                 var down = Math.Abs(rb.velocity.y);
-                N.Console.log(down);
                 if (down > threshold) {
                     N.Meta._(this).destroy();
                     N.Console.log("Lost a crate!");
@@ -39,13 +44,11 @@ namespace GGJ {
         public void dispose(GameObject root) {
             this.gameObject.SetActive(true);
             var t = root.transform.position;
-            t.y += 12f;
+            t.y += offset_up;
             this.gameObject.transform.position = t;
-            N.Console.log(this);
             var rb = N.Meta._(this).cmp<Rigidbody>();
             if (rb != null) {
-                rb.AddForce(new Vector3(0, 1000, 0));
-                N.Console.log("New object up");
+                rb.AddForce(new Vector3(0, force_up, 0));
             }
         }
     }

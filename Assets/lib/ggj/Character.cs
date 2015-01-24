@@ -23,7 +23,11 @@ namespace GGJ {
     }
 
     public void Start() {
-      Character.All.Add(this);
+        Character.All.Add(this);
+    }
+
+    void OnDestroy() {
+        Character.All.Remove(this);
     }
 
     void Update () {
