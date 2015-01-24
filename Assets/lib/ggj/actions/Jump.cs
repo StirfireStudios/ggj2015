@@ -67,6 +67,12 @@ namespace GGJ.Actions {
                     // Stop anyone who's busy shooting
                     var shoot = N.Meta._(this).cmp<Shoot>();
                     shoot.Stop();
+
+                    // If carrying a box, throw it to jump
+                    if (character.box != null) {
+                        N.Meta._(character.box).cmp<Box>().dispose(this.gameObject);
+                        character.box = null;
+                    }
                 }
             }
         }

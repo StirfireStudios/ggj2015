@@ -10,7 +10,7 @@ namespace GGJ {
   public class Character : Mob {
 
     /// Static collection of all know character instances
-    new public static List<Character> All = new List<Character>();
+    public static List<Character> All = new List<Character>();
 
     /// Box instance associated with this character
     public GameObject box = null;
