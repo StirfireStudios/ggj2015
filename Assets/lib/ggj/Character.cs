@@ -16,12 +16,10 @@ namespace GGJ {
 		public GameObject box = null;
 		private GameObject _box = null;
 
-		/// Pending damage to apply to this character
-		private float _pendingDamage = 0;
-
 		public void damage(float damage) {
 			N.Console.log("Takes damage");
-			this._pendingDamage = damage;
+			// TODO this or something
+			N.Meta._(this).cmp<DamageBlip>().activate();
 		}
 
 		public void Start() {
@@ -33,8 +31,6 @@ namespace GGJ {
 				_update();
 				N.Console.log(_stateId(_state));
 				N.Meta._(gameObject).cmp<Animator>().Play(_stateId(_state));
-			}
-			if (this._pendingDamage != 0) {
 			}
 		}
 
