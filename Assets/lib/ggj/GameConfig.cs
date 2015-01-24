@@ -29,7 +29,12 @@ namespace GGJ
 			}
 		}
 
-		Dictionary<InputDevice, Data.CharacterInfo.Type> DeviceCharMapping = new Dictionary<InputDevice, Data.CharacterInfo.Type>();
+        public Dictionary<InputDevice, Data.CharacterInfo.Type> DeviceCharMapping { get; protected set; }
+
+        private GameConfig()
+        {
+            DeviceCharMapping = new Dictionary<InputDevice, Data.CharacterInfo.Type>();
+        }
 		
 		public void SetCharacterForDevice(InputDevice i, Data.CharacterInfo.Type c)
         {
