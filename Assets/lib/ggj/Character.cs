@@ -16,6 +16,14 @@ namespace GGJ {
 		public GameObject box = null;
 		private GameObject _box = null;
 
+		/// Pending damage to apply to this character
+		private float _pendingDamage = 0;
+
+		public void damage(float damage) {
+			N.Console.log("Takes damage");
+			this._pendingDamage = damage;
+		}
+
 		public void Start() {
 			Character.All.Add(this);
 		}
@@ -23,39 +31,44 @@ namespace GGJ {
 		void Update () {
 			if (_updated()) {
 				_update();
-				N.Console.log("Updated state");
-				N.Meta._(gameObject).cmp<Animator>().Play(_stateId(state));
+				N.Console.log(_stateId(_state));
+				N.Meta._(gameObject).cmp<Animator>().Play(_stateId(_state));
+			}
+			if (this._pendingDamage != 0) {
 			}
 		}
 
 		/// Check if the state is updated or not
 		new protected bool _updated() {
-			return (state != _state) || (box != _box);
+			if (state == MobState.None) { return false; }
+			return (state != MobState.None) || (box != _box);
 		}
 
 		/// Mark the state as updated
 		new protected void _update() {
+			N.Console.log("Updating!");
 			_state = state;
 			_box = box;
+      state = MobState.None;
 		}
 
 		/// Return the state id for the given state code
 		new protected string _stateId(MobState state) {
-			var prefix = box != null ? "Box-" : "Gun-";
+			var postfix = box != null ? "_Box" : "_Gun";
 			switch (state) {
 				case MobState.Static:
 				case MobState.None:
-					return prefix + "Static";
+					return "Idle" + postfix;
 				case MobState.Move:
-					return prefix + "Walk";
+					return "Walk" + postfix;
 				case MobState.Jump:
-					return prefix + "Jump";
+					return "Jump" + postfix;
 				case MobState.Attack:
-					return "Gun-Attack";
+					return "GunShotStanding";
 				case MobState.Dead:
-					return "Death";
+					return "Death_Gun";
 			}
-			return prefix + "Static";
+			return "Idle";
 		}
 	}
 }

@@ -37,12 +37,14 @@ namespace GGJ {
 
     /// Check if the state is updated or not
     protected bool _updated() {
+			if (state == MobState.None) { return false; }
       return state != _state;
     }
 
     /// Mark the state as updated
     protected void _update() {
       _state = state;
+      state = MobState.None;
     }
 
     /// Return the state id for the given state code
