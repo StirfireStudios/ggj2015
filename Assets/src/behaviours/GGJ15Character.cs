@@ -61,6 +61,7 @@ public class GGJ15Character : MonoBehaviour {
      */
     public void Update() {
 
+        // Sorry! If you can figure out how to do this with SendMessage, feel free to fix it~
         GGJ.Mob mob = this.gameObject.GetComponentInChildren<GGJ.Character>();
         if (mob == null) {
             mob = this.gameObject.GetComponentInChildren<GGJ.Monster>();
