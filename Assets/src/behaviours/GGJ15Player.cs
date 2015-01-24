@@ -67,8 +67,10 @@ public class GGJ15Player : GGJ15Character {
      */
     private void debugKeys() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            var jumper = gameObject.GetComponent<GGJ.Actions.Jump>();
-            jumper.apply();
+            gameObject.GetComponent<GGJ.Actions.Jump>().apply();
+        };
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            gameObject.GetComponent<GGJ.Actions.Shoot>().apply();
         };
     }
 }
