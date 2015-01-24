@@ -13,6 +13,13 @@ public class UpdateControllerConnectedText : MonoBehaviour
         CheckReadyState();
     }
 
+    GGJ.GameConfig gc = GGJ.GameConfig.Instance;
+
+    public void Start() {        
+
+
+    }
+
     public void Update()
     {
         if (startTime < 0.0f)
@@ -23,6 +30,9 @@ public class UpdateControllerConnectedText : MonoBehaviour
         if (startTime < Time.time)
         {
             Debug.Log("START GAME");
+
+            Application.LoadLevel("Testbench");
+             
             startTime = -1.0f;
         }
 
@@ -38,6 +48,9 @@ public class UpdateControllerConnectedText : MonoBehaviour
         InputDevice device = (InputDevice)data["controller"];
         string name = (string)data["character"];
         characterMapping[device] = name;
+
+        gc.EnqueueMapping(device, name);
+
         CheckReadyState();
     }
 

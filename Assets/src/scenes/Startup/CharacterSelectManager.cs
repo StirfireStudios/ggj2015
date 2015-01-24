@@ -22,6 +22,7 @@ public class CharacterSelectManager : MonoBehaviour
 		readyLabel.SetActive (false);
 		SetCharacter (0);
 		ResetTriggerTimes();
+
 	}
 	
 	public void SetDevice(InputDevice device)
@@ -113,6 +114,8 @@ public class CharacterSelectManager : MonoBehaviour
 	private int currentCharacterIndex = 0;
 	private bool characterReady;
 	private string[] characters = new string[4]{"Character 1", "Character 2", "Character 3", "Character 4"};
+    //private System.Collections.Generic.Dictionary<string, bool> charactersSelectable = new System.Collections.Generic.Dictionary<string, bool>();
+
 	private InputDevice device;
 	private Image portraitImage;
 	private Text nameLabel;

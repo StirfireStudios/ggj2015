@@ -6,56 +6,64 @@ using N.Tests;
 
 namespace GGJ {
 
-	/// Marker to collecting and looking after Characters
-	public class Character : Mob {
+  /// Marker to collecting and looking after Characters
+  public class Character : Mob {
 
-		/// Static collection of all know character instances
-		new public static List<Character> All = new List<Character>();
+    /// Static collection of all know character instances
+    new public static List<Character> All = new List<Character>();
 
-		/// Box instance associated with this character
-		public GameObject box = null;
-		private GameObject _box = null;
+    /// Box instance associated with this character
+    public GameObject box = null;
+    private GameObject _box = null;
 
-		public void Start() {
-			Character.All.Add(this);
-		}
+    public void damage(float damage) {
+      N.Console.log("Takes damage");
+      // TODO this or something
+      N.Meta._(this).cmp<DamageBlip>().activate();
+    }
 
-		void Update () {
-			if (_updated()) {
-				_update();
-				N.Console.log("Updated state");
-				N.Meta._(gameObject).cmp<Animator>().Play(_stateId(state));
-			}
-		}
+    public void Start() {
+      Character.All.Add(this);
+      allow_state_change = true;
+    }
 
-		/// Check if the state is updated or not
-		new protected bool _updated() {
-			return (state != _state) || (box != _box);
-		}
+    void Update () {
+      if (_updated()) {
+        _update();
+        N.Meta._(gameObject).cmp<Animator>().Play(_stateId(_state));
+      }
+    }
 
-		/// Mark the state as updated
-		new protected void _update() {
-			_state = state;
-			_box = box;
-		}
+    /// Check if the state is updated or not
+    new protected bool _updated() {
+      if (state == MobState.None) { return false; }
+      return (state != MobState.None) || (box != _box);
+    }
 
-		/// Return the state id for the given state code
-		new protected string _stateId(MobState state) {
-			var prefix = box != null ? "Box-" : "Gun-";
-			switch (state) {
-				case MobState.Static:
-				case MobState.None:
-					return prefix + "Static";
-				case MobState.Move:
-					return prefix + "Walk";
-				case MobState.Jump:
-					return prefix + "Jump";
-				case MobState.Attack:
-					return "Gun-Attack";
-				case MobState.Dead:
-					return "Death";
-			}
-			return prefix + "Static";
-		}
-	}
+    /// Mark the state as updated
+    new protected void _update() {
+      _state = actual_state;
+      _box = box;
+      actual_state = MobState.None;
+    }
+
+    /// Return the state id for the given state code
+    new protected string _stateId(MobState state) {
+      var postfix = box != null ? "_Box" : "_Gun";
+      switch (state) {
+        case MobState.Static:
+        case MobState.None:
+          return "Idle" + postfix;
+        case MobState.Move:
+          return "Walk" + postfix;
+        case MobState.Jump:
+          return "Jump" + postfix;
+        case MobState.Attack:
+          return "GunShotStanding";
+        case MobState.Dead:
+          return "Death_Gun";
+      }
+      return "Idle";
+    }
+  }
 }

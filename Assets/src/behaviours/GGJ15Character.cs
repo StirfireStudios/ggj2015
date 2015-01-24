@@ -93,30 +93,45 @@ public class GGJ15Character : MonoBehaviour {
          */
         if (DesiredSpeedFactor > _minSpeed)
         {
-
-            if (SpriterObject != null && Mathf.Abs(DesiredHeading.x) > 0.10f)
-            {
-                // Send a flip message to the billboard, but only if we're
-                // moving substantially in the X axis.
-                bool bFlip =
-                    Vector3.Dot(Vector3.right, DesiredHeading) < 0.0f ||
-                    Vector3.Dot(Vector3.right, transform.forward) < 0.0f;
-                SpriterObject.SendMessage("FlipBillboard", bFlip);
-            }
-
             // Rotate.
-            if (CrossProd.y > 0.0f)
+            if (1.0f - DotProd > 0.05f)
             {
-                transform.Rotate(Vector3.up * (Time.deltaTime + 4) * RotationSpeedScale, Space.World);
-            }
-            else
-            {
-                transform.Rotate(Vector3.up * (Time.deltaTime - 4) * RotationSpeedScale, Space.World);
+                if (CrossProd.y > 0.0f)
+                {
+                    transform.Rotate(Vector3.up * (Time.deltaTime + 4) * RotationSpeedScale, Space.World);
+                }
+                else
+                {
+                    transform.Rotate(Vector3.up * (Time.deltaTime - 4) * RotationSpeedScale, Space.World);
+                }
             }
 
             // Translate.
             Vector3 Translation = Vector3.forward * Speed * DesiredSpeedFactor * Time.deltaTime;
             transform.Translate(Translation, Space.Self);
+
+            // Process animation.
+            if (SpriterObject != null)
+            {
+                SpriterObject.SendMessage("SetState", GGJ.MobState.Move);
+
+                if (Mathf.Abs(DesiredHeading.x) > 0.10f)
+                {
+                    // Send a flip message to the billboard, but only if we're
+                    // moving substantially in the X axis.
+                    bool bFlip =
+                        Vector3.Dot(Vector3.right, DesiredHeading) < 0.0f ||
+                        Vector3.Dot(Vector3.right, transform.forward) < 0.0f;
+                    SpriterObject.SendMessage("FlipBillboard", bFlip);
+                }
+            }
+        }
+        else {
+
+            if (SpriterObject != null)
+            {
+                SpriterObject.SendMessage("SetState", GGJ.MobState.Static);
+            }
         }
     }
 
