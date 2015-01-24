@@ -24,6 +24,11 @@ namespace GGJ {
 		public MobState state = MobState.Static;
 		protected MobState _state = MobState.None;
 
+      // Public setter so we can just use SendMessage / BroadcastMessage
+        public void SetState(MobState newstate) {
+            state = newstate;
+        }
+
     void Start () {
 			Mob.All.Add(this);
     }
