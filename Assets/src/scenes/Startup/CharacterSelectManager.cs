@@ -70,7 +70,15 @@ public class CharacterSelectManager : MonoBehaviour {
 			return;
 		}
 		GGJ.Data.CharacterInfo.Type type = GGJ.Data.Characters.Instance.Types [index];
-		nameLabel.text = characters[type].Name;
+		GGJ.Data.CharacterInfo info = characters [type];
+		nameLabel.text = info.Name;
+		if (info.PortraitResource != null)
+		{
+			portraitImage.sprite =  Resources.Load<Sprite>(info.PortraitResource);
+		} else 
+		{
+			portraitImage.sprite = null;
+		}
 		currentCharacterIndex = index;
 	}
 

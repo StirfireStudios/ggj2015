@@ -49,6 +49,7 @@ namespace GGJ.Data
 			CharacterInfo charInfo = new CharacterInfo();
 			charInfo.Name = "Ryker Zane";
 			charInfo.CharacterType = Type.RykerZane;
+			charInfo.PortraitResource = "Sprites/Guy/Head_Guy";
 			return charInfo;
 		}
 
