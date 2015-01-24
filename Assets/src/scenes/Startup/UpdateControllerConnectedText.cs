@@ -9,10 +9,6 @@ public class UpdateControllerConnectedText : MonoBehaviour {
 	void Start () {
 		OnNumControllersChanged(0);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	}
 
 	private void OnNumControllersChanged(int connectedDevices) {
 		if (connectedDevices == 0) {

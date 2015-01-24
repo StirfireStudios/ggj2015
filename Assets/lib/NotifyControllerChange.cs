@@ -4,13 +4,16 @@ using InControl;
 
 public class NotifyControllerChange : MonoBehaviour {
 
-	// Update is called once per frame
-	public void Update () {
-		if (connectedDevices != InputManager.Devices.Count) {
-			connectedDevices = InputManager.Devices.Count;
-			this.SendMessage("OnNumControllersChanged", connectedDevices, SendMessageOptions.DontRequireReceiver);
-		}
+	public void Start () {
+		InputManager.OnDeviceAttached += OnDeviceAttached;
+		InputManager.OnDeviceDetached += OnDeviceDetached;
 	}
-	
-	private int connectedDevices = 0;
+
+	public void OnDeviceAttached(InputDevice device) {
+		this.SendMessage("OnNumControllersChanged", InputManager.Devices.Count, SendMessageOptions.DontRequireReceiver);
+	}
+
+	public void OnDeviceDetached(InputDevice device) {
+		this.SendMessage("OnNumControllersChanged", InputManager.Devices.Count, SendMessageOptions.DontRequireReceiver);
+	}
 }
