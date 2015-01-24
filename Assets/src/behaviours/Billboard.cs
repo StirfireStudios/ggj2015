@@ -34,6 +34,4 @@ public class Billboard : MonoBehaviour {
     void FlipBillboard(bool flipped = true) {
         bFlip = flipped;
     }
-
-    
 }
