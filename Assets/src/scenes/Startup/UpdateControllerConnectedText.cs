@@ -42,10 +42,8 @@ public class UpdateControllerConnectedText : MonoBehaviour {
 	}
 
 	private void CheckReadyState() {
-		Debug.Log ("Checking Ready State");
 		if (characterMapping.Count == InputManager.Devices.Count) {
 			startTime = Time.time + 5.0f;
-			Debug.Log ("Clock Running!");
 		} else {
 			startTime = -1.0f;
 			SetControllerText(InputManager.Devices.Count);
