@@ -6,7 +6,7 @@ using N.Tests;
 
 namespace GGJ {
 
-  /// Marker to collecting and looking after Characters
+  /// Marker for collecting and looking after Characters
   public class Character : Mob {
 
     /// Static collection of all know character instances

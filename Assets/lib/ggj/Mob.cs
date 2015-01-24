@@ -87,9 +87,6 @@ namespace GGJ {
     /// Common behaviours and data for all mobile types
     public class Mob : MonoBehaviour {
 
-        /** Static collection of all know character instances */
-        public static List<Mob> All = new List<Mob>();
-
         /** State manager */
         protected MobStateBucket _state = new MobStateBucket();
 
@@ -119,7 +116,6 @@ namespace GGJ {
         }
 
         void Start () {
-          Mob.All.Add(this);
         }
 
         void Update () {
@@ -134,15 +130,15 @@ namespace GGJ {
           switch (state) {
             case MobState.Static:
             case MobState.None:
-                return "Static";
+                return "Idle";
             case MobState.Move:
                 return "Walk";
             case MobState.Attack:
-                return "Attack";
+                return "Bite";
             case MobState.Dead:
                 return "Death";
           }
-          return "Static";
+          return "Idle";
         }
     }
 }
