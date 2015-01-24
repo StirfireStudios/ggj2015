@@ -16,13 +16,17 @@ namespace GGJ.Actions {
         /** Idle animation threshold */
         private float _threshold = 0.5f;
 
+        /** Bullet factory */
+        private GameObject _bulletFactory = null;
+
         /** Disable shooting explicitly */
         public void Stop() {
             _active = false;
         }
-        
+
         public void Start() {
-            this._idle = 0f;
+            _idle = 0f;
+            _bulletFactory = Resources.Load("objects/Bullet", typeof(GameObject)) as GameObject;
         }
 
         public void Update() {
@@ -46,6 +50,15 @@ namespace GGJ.Actions {
                 character.allow_state_change = false;
                 _active = true;
                 _idle = 0f;
+
+                // Create a new bullet in the direction of the player
+                var force = new Vector3(10, 5, 0);
+                var instance = UnityEngine.Object.Instantiate(_bulletFactory) as GameObject;
+                var pos = this.gameObject.transform.position;
+                pos.x += 10;
+                instance.transform.position = pos;
+                //var rb = N.Meta._(instance).cmp<Rigidbody>();
+                //rb.AddForce(force);
             }
         }
     }
