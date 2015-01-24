@@ -49,7 +49,7 @@ namespace GGJ.Actions {
                 if (_idle > idle_timeout) {
                     airbourne = false;
                     var character = N.Meta._(this).cmp<Character>();
-                    character.allow_state_change = true;
+                    character.FinishedState();
                     this._active = false;
                 }
             }
@@ -58,16 +58,16 @@ namespace GGJ.Actions {
         /** Trigger this effect on the target */
         public void apply() {
             if (!airbourne) {
-                _rb.AddForce(this._up);
                 var character = N.Meta._(this).cmp<Character>();
-                character.allow_state_change = true; // haha
-                character.state = MobState.Jump;
-                character.allow_state_change = false;
-                _active = true;
+                if (character.SetState(MobState.Jump, true)) {
+                    _rb.AddForce(this._up);
+                    _idle = 0;
+                    _active = true;
 
-                // Shot anyone who's busy shooting
-                var shoot = N.Meta._(this).cmp<Shoot>();
-                shoot.Stop();
+                    // Stop anyone who's busy shooting
+                    var shoot = N.Meta._(this).cmp<Shoot>();
+                    shoot.Stop();
+                }
             }
         }
     }
