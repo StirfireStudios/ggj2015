@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace GGJ.Data 
 {
@@ -32,7 +31,7 @@ namespace GGJ.Data
 		public static CharacterInfo Engineer()
 		{
 			CharacterInfo charInfo = new CharacterInfo();
-			charInfo.Name = "Designation 442";
+			charInfo.Name = "Mara Quinn";
 			charInfo.CharacterType = Type.MaraQuinn;
 			return charInfo;
 		}

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using InControl;
 using UnityEngine.UI;
 
@@ -18,6 +18,7 @@ public class CharacterSelectManager : MonoBehaviour {
 		nameLabel = transform.FindChild ("Name").gameObject.GetComponent<Text> ();
 		readyLabel = transform.FindChild ("Ready").gameObject;
 		readyLabel.SetActive (false);
+		characters = GGJ.Data.Characters.Instance.CharacterList;
 		SetCharacter (0);
 		ResetTriggerTimes();
 
@@ -52,8 +53,8 @@ public class CharacterSelectManager : MonoBehaviour {
 		if (Time.time - lastTriggered [action] > DebouceDelay) {
 			int newIndex = currentCharacterIndex + moveIndex;
 			if (newIndex < 0) {
-				newIndex = characters.Length - 1;
-			} else if (newIndex >= characters.Length) {
+				newIndex = characters.Count - 1;
+			} else if (newIndex >= characters.Count) {
 				newIndex = 0;
 			}
 			lastTriggered[action] = Time.time;
@@ -65,10 +66,11 @@ public class CharacterSelectManager : MonoBehaviour {
 	}
 
 	private void SetCharacter(int index) {
-		if ((index < 0) || (index >= characters.Length)) {
+		if ((index < 0) || (index >= characters.Count)) {
 			return;
 		}
-		nameLabel.text = characters[index];
+		GGJ.Data.CharacterInfo.Type type = GGJ.Data.Characters.Instance.Types [index];
+		nameLabel.text = characters[type].Name;
 		currentCharacterIndex = index;
 	}
 
@@ -84,7 +86,7 @@ public class CharacterSelectManager : MonoBehaviour {
 		if (characterReady) {
 			System.Collections.Generic.Dictionary<string, object> data = new System.Collections.Generic.Dictionary<string, object> ();
 			data ["controller"] = device;
-			data ["character"] = characters [currentCharacterIndex];
+			data ["character"] =  GGJ.Data.Characters.Instance.Types [currentCharacterIndex];
 			SendMessageUpwards ("SetCharacterPairing", data);
 		} else {
 			SendMessageUpwards ("RemoveCharacterForDevice", device);
@@ -93,12 +95,11 @@ public class CharacterSelectManager : MonoBehaviour {
 
 	private int currentCharacterIndex = 0;
 	private bool characterReady;
-	private string[] characters = new string[4]{"Character 1", "Character 2", "Character 3", "Character 4"};
-    //private System.Collections.Generic.Dictionary<string, bool> charactersSelectable = new System.Collections.Generic.Dictionary<string, bool>();
 
+	private Dictionary<GGJ.Data.CharacterInfo.Type, GGJ.Data.CharacterInfo> characters;
 	private InputDevice device;
 	private Image portraitImage;
 	private Text nameLabel;
 	private GameObject readyLabel;
-	private System.Collections.Generic.Dictionary<string, float> lastTriggered = new System.Collections.Generic.Dictionary<string, float> ();
+	private Dictionary<string, float> lastTriggered = new Dictionary<string, float> ();
 }
