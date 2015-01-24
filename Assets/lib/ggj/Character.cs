@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using GGJ;
+using N.Tests;
 
 namespace GGJ {
 
@@ -22,13 +23,14 @@ namespace GGJ {
 		void Update () {
 			if (_updated()) {
 				_update();
+				N.Console.log("Updated state");
 				N.Meta._(gameObject).cmp<Animator>().Play(_stateId(state));
 			}
 		}
 
 		/// Check if the state is updated or not
 		new protected bool _updated() {
-			return (state != _state) && (box != _box);
+			return (state != _state) || (box != _box);
 		}
 
 		/// Mark the state as updated
@@ -46,6 +48,8 @@ namespace GGJ {
 					return prefix + "Static";
 				case MobState.Move:
 					return prefix + "Walk";
+				case MobState.Jump:
+					return prefix + "Jump";
 				case MobState.Attack:
 					return "Gun-Attack";
 				case MobState.Dead:
