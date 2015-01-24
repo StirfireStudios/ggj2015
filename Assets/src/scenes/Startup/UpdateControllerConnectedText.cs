@@ -7,6 +7,8 @@ public class UpdateControllerConnectedText : MonoBehaviour
 {
     public float updateClockInterval = 0.01f;
 
+    public float BrendansMagicNumber = 5.0f;
+
     public void OnNumControllersChanged(int connectedDevices)
     {
         SetControllerText(connectedDevices);
@@ -62,7 +64,7 @@ public class UpdateControllerConnectedText : MonoBehaviour
     {
 		if ((gc.NumberOfPlayers == InputManager.Devices.Count) && (gc.NumberOfPlayers > 0))
 		{
-			startTime = Time.time + 5.0f;
+			startTime = Time.time + BrendansMagicNumber;
 		}
 			else
 		{
