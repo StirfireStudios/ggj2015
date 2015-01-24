@@ -4,13 +4,15 @@ using InControl;
 
 public class UpdateCharacterSelect : MonoBehaviour {
 	public GameObject CharacterSelectPrefab;
-
+	
 	public void Start () {
 		InputManager.OnDeviceAttached += new System.Action<InputDevice>(ShowPanel);
 		InputManager.OnDeviceDetached += new System.Action<InputDevice>(HidePanel);
 		foreach (InputDevice device in InputManager.Devices) {
 			ShowPanel (device);
 		}
+
+
 	}
 	
 	public void ShowPanel(InputDevice device) {
@@ -29,6 +31,8 @@ public class UpdateCharacterSelect : MonoBehaviour {
 			panel.SetActive(false);
 		}
 	}
+	
+
 
 	private GameObject GetPanelFor(InputDevice device) {
 		return GetPanelFor (device, false);
