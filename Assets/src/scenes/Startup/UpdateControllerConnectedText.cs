@@ -58,6 +58,14 @@ public class UpdateControllerConnectedText : MonoBehaviour
         CheckReadyState();
     }
 
+    public void OnKeyboardEnabled()
+    {
+    }
+
+    public void OnKeyboardDisabled()
+    {
+    }
+
     private void CheckReadyState()
     {
 		if ((gc.NumberOfPlayers == InputManager.Devices.Count) && (gc.NumberOfPlayers > 0))
@@ -73,17 +81,17 @@ public class UpdateControllerConnectedText : MonoBehaviour
 
     private void SetControllerText(int connectedDevices)
     {
-        if (connectedDevices == 0)
+        if (connectedDevices == 1)
         {
             this.GetComponent<Text>().text = "No Controllers Found";
         }
-        else if (connectedDevices == 1)
+        else if (connectedDevices == 2)
         {
             this.GetComponent<Text>().text = "1 Controller Found";
         }
-        else if (connectedDevices > 1)
+        else if (connectedDevices > 2)
         {
-            this.GetComponent<Text>().text = connectedDevices + " Controllers Found";
+            this.GetComponent<Text>().text = connectedDevices - 1 + " Controllers Found";
         }
     }
 
