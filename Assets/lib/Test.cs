@@ -31,5 +31,12 @@ namespace N.Tests {
         return false;
       }
     }
+
+    /// Assert something is true in a test
+    public static void assert(bool value) {
+      if (!value) {
+        throw new Exception("Test failed");
+      }
+    }
   }
 }
