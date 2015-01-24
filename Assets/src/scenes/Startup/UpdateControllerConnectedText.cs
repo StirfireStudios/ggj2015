@@ -3,22 +3,18 @@ using UnityEngine.UI;
 using System.Collections;
 using InControl;
 
-public class PlayerConnectedText : MonoBehaviour {
+public class UpdateControllerConnectedText : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		UpdateText();
+		OnNumControllersChanged(0);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (connectedDevices != InputManager.Devices.Count) {
-			UpdateText();
-		}
 	}
 
-	private void UpdateText() {
-		connectedDevices = InputManager.Devices.Count;
+	private void OnNumControllersChanged(int connectedDevices) {
 		if (connectedDevices == 0) {
 			this.GetComponent<Text>().text = "No Controllers Found";
 		} else if (connectedDevices == 1) {
@@ -27,6 +23,4 @@ public class PlayerConnectedText : MonoBehaviour {
 			this.GetComponent<Text>().text = connectedDevices + " Controllers Found";
 		}
 	}
-
-	private int connectedDevices = 0;
 }
