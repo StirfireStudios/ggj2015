@@ -57,4 +57,8 @@ public class GGJ15Player : GGJ15Character {
         base.Update();
     }
 
+
+	public void OnJoinedRoom() {
+		Debug.Log ("I JOINED A ROOM!");
+	}
 }
