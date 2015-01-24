@@ -44,10 +44,13 @@ namespace GGJ
 			}
 		}
 
-		
-
         public void DebugMeh() {
             Debug.Log(String.Format("number of players: #{0}", DeviceCharMapping.Count));
+			foreach (InputDevice device in DeviceCharMapping.Keys)
+			{
+				Data.CharacterInfo chara = Data.Characters.Instance.CharacterList[DeviceCharMapping[device]];
+				Debug.Log ("Char is: " + chara.Name);
+			}
         }
 
     }
