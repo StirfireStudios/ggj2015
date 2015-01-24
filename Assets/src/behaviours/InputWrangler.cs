@@ -49,6 +49,9 @@ public class InputWrangler : MonoBehaviour {
 
         }
 
+        // tell the camera to start watching players
+        Camera.main.SendMessage("StartWatchingPlayers");
+
 	}
 	
 	// Update is called once per frame
