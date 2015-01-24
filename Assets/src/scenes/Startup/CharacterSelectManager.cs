@@ -3,7 +3,8 @@ using System.Collections;
 using InControl;
 using UnityEngine.UI;
 
-public class CharacterSelectManager : MonoBehaviour {
+public class CharacterSelectManager : MonoBehaviour
+{
 	public float DebouceDelay = 0.25f;
 	public float StickThreshold = 0.25f;
 	public float DPadThreshold = 0.25f;
@@ -13,7 +14,8 @@ public class CharacterSelectManager : MonoBehaviour {
 	private static string READY_ACTION_NAME = "ready";
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		portraitImage = transform.FindChild ("Portrait").gameObject.GetComponent<Image> ();
 		nameLabel = transform.FindChild ("Name").gameObject.GetComponent<Text> ();
 		readyLabel = transform.FindChild ("Ready").gameObject;
@@ -22,49 +24,64 @@ public class CharacterSelectManager : MonoBehaviour {
 		ResetTriggerTimes();
 	}
 	
-	public void SetDevice(InputDevice device) {
+	public void SetDevice(InputDevice device)
+	{
 		this.device = device;
 	}
 
-	public void Update() {
-		if (device == null) {
+	public void Update()
+	{
+		if (device == null)
+		{
 			return;
 		}
 		string action = null;
 		int moveIndex = 0;
-		if ((device.LeftStick.Y > StickThreshold) || (device.DPadY > DPadThreshold)) {
+		if ((device.LeftStick.Y > StickThreshold) || (device.DPadY > DPadThreshold))
+		{
 			action = UP_ACTION_NAME;
 			moveIndex = -1;
 		}
-		if ((device.LeftStick.Y < -StickThreshold) || (device.DPadY < -DPadThreshold)) {
+		if ((device.LeftStick.Y < -StickThreshold) || (device.DPadY < -DPadThreshold))
+		{
 			action = DOWN_ACTION_NAME;
 			moveIndex = 1;
 		}
-		if (device.Action1) {
+		if (device.Action1)
+		{
 			action = READY_ACTION_NAME;
 		}
 
-		if (action == null) {
+		if (action == null)
+		{
 			ResetTriggerTimes();
 			return;
 		}
-		if (Time.time - lastTriggered [action] > DebouceDelay) {
+		if (Time.time - lastTriggered [action] > DebouceDelay)
+		{
 			int newIndex = currentCharacterIndex + moveIndex;
-			if (newIndex < 0) {
+			if (newIndex < 0)
+			{
 				newIndex = characters.Length - 1;
-			} else if (newIndex >= characters.Length) {
+			} else if (newIndex >= characters.Length)
+			{
 				newIndex = 0;
 			}
 			lastTriggered[action] = Time.time;
 			if ((action == UP_ACTION_NAME) || (action == DOWN_ACTION_NAME))
+			{
 				SetCharacter(newIndex);
+			}
 			if (action == READY_ACTION_NAME)
+			{
 				ToggleReady();
+			}
 		}
 	}
 
 	private void SetCharacter(int index) {
-		if ((index < 0) || (index >= characters.Length)) {
+		if ((index < 0) || (index >= characters.Length))
+		{
 			return;
 		}
 		nameLabel.text = characters[index];
@@ -77,15 +94,18 @@ public class CharacterSelectManager : MonoBehaviour {
 		lastTriggered[READY_ACTION_NAME] = -1.0f;
 	}
 
-	private void ToggleReady() {
+	private void ToggleReady()
+	{
 		characterReady = !characterReady;
 		readyLabel.SetActive(characterReady);
-		if (characterReady) {
+		if (characterReady)
+		{
 			System.Collections.Generic.Dictionary<string, object> data = new System.Collections.Generic.Dictionary<string, object> ();
 			data ["controller"] = device;
 			data ["character"] = characters [currentCharacterIndex];
 			SendMessageUpwards ("SetCharacterPairing", data);
-		} else {
+		} else
+		{
 			SendMessageUpwards ("RemoveCharacterForDevice", device);
 		}
 	}
