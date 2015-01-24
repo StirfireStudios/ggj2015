@@ -42,6 +42,7 @@ public class UpdateCharacterSelect : MonoBehaviour {
 				GameObject newPanel = (GameObject)GameObject.Instantiate (CharacterSelectPrefab);
 				newPanel.transform.SetParent(this.transform, false);
 				newPanel.SendMessage("SetDevice", device);
+				newPanel.name = device.Name + " Selector";
 				characterSelectors[device] = newPanel;
 				return newPanel;
 			} else {
