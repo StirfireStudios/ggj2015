@@ -109,10 +109,6 @@ namespace GGJ
                     this.ApplyConstraint(dic.Key, kvp.Key, kvp.Value);
 	            }
             }
-
-            // update scales (well, they're more like flags)
-            Debug.Log("min:" + _min.ToString() + " " + _min_scale.ToString());
-            Debug.Log("max:" + _max.ToString() + " " + _max_scale.ToString());
         }
 
 
@@ -130,9 +126,9 @@ namespace GGJ
         }
 
         public void LateUpdate() {
-            //Vector3 maxclamped = Vector3.Min(transform.position, _max);
             Vector3 pos = transform.position;
 
+            // Dear god there has to be a better way.
             if (_min_scale.x > 0.0f)
             {
                 pos.x = Mathf.Max(_min.x, pos.x);
