@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using GGJ.Actions;
 
 namespace GGJ {
 
@@ -84,8 +85,17 @@ namespace GGJ {
         }
     }
 
-    /// Common behaviours and data for all mobile types
+    /** Common behaviours and data for all mobile types */
     public class Mob : MonoBehaviour {
+
+        /** Amount of HP left on this mob */
+        public float hp = 100;
+
+        /** Is this mob actually alive at this point? */
+        public bool alive = true;
+
+        /** Is this sprite currently flipped? */
+        public bool flipped = false;
 
         /** State manager */
         protected MobStateBucket _state = new MobStateBucket();
@@ -95,6 +105,15 @@ namespace GGJ {
          */
         public void SetState(MobState newstate) {
             _state.request(newstate);
+        }
+
+        /**
+         * Force an animation state; use only for death animation, etc. with no
+         * exit transitions.
+         */
+        public void ForceState(MobState newstate) {
+            _state.reset();
+            _state.request(newstate, true);
         }
 
         /**
@@ -115,10 +134,29 @@ namespace GGJ {
             _state.request(next);
         }
 
+        /** Mob took damage */
+        public void damage(float damage) {
+            var blips = gameObject.GetComponentsInChildren<DamageBlip>();
+            for (var i = 0; i < blips.Length; ++i) {
+                blips[i].activate();
+            }
+            this.hp -= damage;
+            if (hp <= 0) {
+                N.Console.log(gameObject +  " dies");
+                N.Meta._(this).cmp<Die>().apply();
+                this.alive = false;
+            }
+        }
+
         void Start () {
         }
 
         void Update () {
+            _updateAnimationState();
+        }
+
+        /// Push state update
+        protected void _updateAnimationState() {
             var state = this._state.next();
             if (state != MobState.None) {
                 N.Meta._(gameObject).cmp<Animator>().Play(_stateId(state));

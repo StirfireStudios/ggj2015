@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using GGJ;
-using N.Tests;
+using GGJ.Actions;
+using N;
 
 namespace GGJ {
 
@@ -22,7 +23,6 @@ namespace GGJ {
     public class IdleWaitBehaviour : IMonsterBehaviour {
         public IMonsterBehaviour Update(Monster self, List<Character> characters) {
             if (self.visible) {
-                N.Console.log("Monster wakes");
                 return new RunAndKillBehaviour();
             }
             return null;
@@ -32,6 +32,18 @@ namespace GGJ {
     /** Basic run and kill closest target behaviour */
     public class RunAndKillBehaviour : IMonsterBehaviour {
         public IMonsterBehaviour Update(Monster self, List<Character> characters) {
+
+            // Cull dead targets
+            if ((self.target) && (!self.target.alive)) {
+                self.target = null;
+                var controller = N.Meta._(self).cmp<GGJ15Character>();
+                controller.DesiredSpeedFactor = 0f;
+            }
+
+            // Filter to characters who are alive
+            characters = characters.FindAll(_alive);
+
+            // Find new target
             if ((characters.Count > 0) && (self.target == null)) {
                 var min = Vector3.Distance(characters[0].transform.position, self.transform.position);
                 var target = characters[0];
@@ -42,25 +54,54 @@ namespace GGJ {
                         target = characters[i];
                     }
                 }
-                N.Console.log("Monster seeks " + target);
-                self.target = target.gameObject;
-
-                // Run towards target if further than attack distance
-
-                // If closer than attack distance, ATTTAAAAACCKK RARRRRRARARRrrrr~
+                self.target = target;
             }
+
+            // Move towards target
+            if (self.target != null) {
+                var controller = N.Meta._(self).cmp<GGJ15Character>();
+                var heading = self.target.gameObject.transform.position - self.transform.position;
+                controller.DesiredHeading = heading;
+                controller.DesiredHeading.Normalize();
+                controller.DesiredSpeedFactor = self.move_speed;
+
+                // If close, attack
+                var dist = Vector3.Distance(self.target.transform.position, self.transform.position);
+                if (dist < self.bounding_attack_distance) {
+                    var attack = N.Meta._(self).cmp<Attack>(true);
+                    if (attack != null) {
+                        attack.apply(self.target);
+                    }
+                }
+            }
+
             return null;
+        }
+
+        // Find characters who are alive
+        private static bool _alive(Character c)
+        {
+            return c.alive;
         }
     }
 
     /** Marker for collecting and looking after Monsters */
     public class Monster : Mob {
 
+        /** Static collection of all know character instances */
+        public static List<Monster> All = new List<Monster>();
+
         /** Currently visible? */
         public bool visible;
 
+        /** Bounding attack distance to hit players */
+        public float bounding_attack_distance = 4f;
+
+        /** How fast should this monster move */
+        public float move_speed = 0.5f;
+
         /** The game object this monster is currently hunting */
-        public GameObject target;
+        public Character target;
 
         /** The behaviour we're currently using */
         private IMonsterBehaviour _brain;
@@ -72,7 +113,13 @@ namespace GGJ {
         public void Start () {
             SetState(MobState.Static);
             _brain = new IdleWaitBehaviour();
+            Monster.All.Add(this);
             target = null;
+        }
+
+        public void OnDestroy() {
+            Monster.All.Remove(this);
+            MonsterSpawner.spawned -= 1;
         }
 
         public void Update() {
@@ -90,6 +137,9 @@ namespace GGJ {
             if (next != null) {
                 _brain = next;
             }
+
+            // Push states
+            _updateAnimationState();
         }
     }
 }
