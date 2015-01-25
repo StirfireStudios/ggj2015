@@ -91,6 +91,9 @@ namespace GGJ {
     /** Marker for collecting and looking after Monsters */
     public class Monster : Mob {
 
+        /** Static collection of all know character instances */
+        public static List<Monster> All = new List<Monster>();
+
         /** Currently visible? */
         public bool visible;
 
@@ -113,7 +116,13 @@ namespace GGJ {
         public void Start () {
             SetState(MobState.Static);
             _brain = new IdleWaitBehaviour();
+            Monster.All.Add(this);
             target = null;
+        }
+
+
+        public void OnDestroy() {
+            Monster.All.Remove(this);
         }
 
         public void Update() {
@@ -135,21 +144,5 @@ namespace GGJ {
             // Push states
             _updateAnimationState();
         }
-
-        /** When this monster comes in contact with a player, damage that player and render an attack animation */
-        /*void OnCollisionEnter(Collision collision) {
-            if (this.alive) {
-                var character = N.Meta._(collision.gameObject).cmp<Character>();
-                if ((character != null) && (character.alive)) {
-                    if (character != null) {
-                        var attack = N.Meta._(this).cmp<Attack>(true);
-                        if (attack != null) {
-                            N.Console.log("Triggered attack");
-                            attack.apply(character);
-                        }
-                    }
-                }
-            }
-        }*/
     }
 }
