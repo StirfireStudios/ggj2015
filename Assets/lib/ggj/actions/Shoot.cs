@@ -54,11 +54,13 @@ namespace GGJ.Actions {
         /** Trigger this effect on the target */
         public void apply() {
             var character = N.Meta._(this).cmp<Character>();
-            if (character.box == null) {
-                if (character.RequestState(MobState.Attack, true)) {
-                    _active = true;
-                    _idle = 0f;
-                    this._shoot(character);
+            if (character.alive) {
+                if (character.box == null) {
+                    if (character.RequestState(MobState.Attack, true)) {
+                        _active = true;
+                        _idle = 0f;
+                        this._shoot(character);
+                    }
                 }
             }
         }

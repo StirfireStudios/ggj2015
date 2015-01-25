@@ -61,19 +61,21 @@ namespace GGJ.Actions {
         public void apply() {
             if (!airbourne) {
                 var character = N.Meta._(this).cmp<Character>();
-                if (character.RequestState(MobState.Jump, true)) {
-                    _rb.AddForce(this._up);
-                    _idle = 0;
-                    _active = true;
+                if (character.alive) {
+                    if (character.RequestState(MobState.Jump, true)) {
+                        _rb.AddForce(this._up);
+                        _idle = 0;
+                        _active = true;
 
-                    // Stop anyone who's busy shooting
-                    var shoot = N.Meta._(this).cmp<Shoot>();
-                    shoot.Stop();
+                        // Stop anyone who's busy shooting
+                        var shoot = N.Meta._(this).cmp<Shoot>();
+                        shoot.Stop();
 
-                    // If carrying a box, throw it to jump
-                    if (character.box != null) {
-                        N.Meta._(character.box).cmp<Box>().dispose(this.gameObject);
-                        character.box = null;
+                        // If carrying a box, throw it to jump
+                        if (character.box != null) {
+                            N.Meta._(character.box).cmp<Box>().dispose(this.gameObject);
+                            character.box = null;
+                        }
                     }
                 }
             }

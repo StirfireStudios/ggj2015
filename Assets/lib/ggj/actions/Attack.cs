@@ -38,14 +38,12 @@ namespace GGJ.Actions {
         /** Trigger this effect on the target */
         public void apply(Character target) {
             var monster = N.Meta._(this).cmp<Monster>();
-            if (monster.RequestState(MobState.Attack, true)) {
-                _active = true;
-                _idle = 0f;
-                target.damage(damage);
-                N.Console.log("Attack state");
-            }
-            else {
-                N.Console.log("Rejected request to attack");
+            if (monster.alive) {
+                if (monster.RequestState(MobState.Attack, true)) {
+                    _active = true;
+                    _idle = 0f;
+                    target.damage(damage);
+                }
             }
         }
     }

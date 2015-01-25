@@ -42,6 +42,9 @@ namespace GGJ {
                 controller.DesiredSpeedFactor = 0f;
             }
 
+            // Filter to characters who are alive
+            characters = characters.FindAll(_alive);
+
             // Find new target
             if ((characters.Count > 0) && (self.target == null)) {
                 var min = Vector3.Distance(characters[0].transform.position, self.transform.position);
@@ -76,6 +79,12 @@ namespace GGJ {
             }
 
             return null;
+        }
+
+        // Find characters who are alive
+        private static bool _alive(Character c)
+        {
+            return c.alive;
         }
     }
 

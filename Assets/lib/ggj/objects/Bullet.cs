@@ -30,6 +30,7 @@ namespace GGJ {
 		void OnCollisionEnter(Collision collision) {
 			var monster = N.Meta._(collision.gameObject).cmp<Monster>(true);
 			if (monster != null) {
+				N.Console.log("Shot monster");
 				monster.damage(damage);
 				N.Meta._(this).destroy();
 			}
