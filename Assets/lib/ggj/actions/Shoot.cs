@@ -7,6 +7,9 @@ namespace GGJ.Actions {
     [RequireComponent (typeof (Rigidbody))]
     public class Shoot : MonoBehaviour {
 
+        /** How much damage do we do with this? */
+        public float damage = 10f;
+
         /** Is this component currently active? */
         public bool _active;
 
@@ -58,6 +61,7 @@ namespace GGJ.Actions {
         private void _shoot() {
             var force = new Vector3(100, 5, 0);
             var instance = UnityEngine.Object.Instantiate(_bulletFactory) as GameObject;
+            var bullet = N.Meta._(instance).cmp<Bullet>().damage = damage;
             var pos = this.gameObject.transform.position;
             pos.x += 5;
             pos.y += 5;

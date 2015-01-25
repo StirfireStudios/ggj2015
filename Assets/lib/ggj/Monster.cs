@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using GGJ;
-using N.Tests;
+using GGJ.Actions;
+using N;
 
 namespace GGJ {
 
@@ -59,9 +60,6 @@ namespace GGJ {
         /** Currently visible? */
         public bool visible;
 
-        /** The amaount of damage we're gonna do with this monster */
-        public float damage;
-
         /** The game object this monster is currently hunting */
         public GameObject target;
 
@@ -93,14 +91,22 @@ namespace GGJ {
             if (next != null) {
                 _brain = next;
             }
+
+            // Push states
+            _updateAnimationState();
         }
 
         /** When this monster comes in contact with a player, damage that player and render an attack animation */
         void OnCollisionEnter(Collision collision) {
-            var character = N.Meta._(collision.gameObject).cmp<Character>(true);
-            if (character != null) {
-                this.RequestState(MobState.Attack, true);
-                character.damage(damage);
+            if (this.alive) {
+                var character = N.Meta._(collision.gameObject).cmp<Character>(true);
+                if (character != null) {
+                    var attack = N.Meta._(this).cmp<Attack>(true);
+                    if (attack != null) {
+                        N.Console.log("Triggered attack");
+                        attack.apply(character);
+                    }
+                }
             }
         }
     }
