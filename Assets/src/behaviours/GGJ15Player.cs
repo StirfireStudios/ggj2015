@@ -67,4 +67,14 @@ public class GGJ15Player : GGJ15Character {
         if (device.Action2)
             gameObject.GetComponent<GGJ.Actions.Jump>().apply();
     }
+
+    public void OnPlayerWalkStart()
+    {
+        Debug.Log("START WALK CYCLE");
+    }
+
+    public void OnPlayerWalkStop()
+    {
+        Debug.Log("STOP WALK CYCLE");
+    }
 }
