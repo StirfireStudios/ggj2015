@@ -39,7 +39,11 @@ namespace GGJ.Actions {
             airbourne = false;
             _up = up.normalized * magnitude;
             _rb = N.Meta._(this).cmp<Rigidbody>();
-            _moveSource = transform.FindChild("MovementSound").gameObject.GetComponent<AudioSource>();
+
+            var child = transform.FindChild("MovementSound");
+            if (child) {
+                _moveSource = child.gameObject.GetComponent<AudioSource>();
+            }
             if (_moveSource == null)
             {
                 Debug.Log("Warning: Player object shoot action couldn't find movement audio source");
@@ -59,10 +63,12 @@ namespace GGJ.Actions {
             if (this._active) {
                 if (_idle > idle_timeout) {
                     airbourne = false;
-                    var character = N.Meta._(this).cmp<Character>();
-                    character.FinishedState();
-                    this._active = false;
-                    _playSound();
+                    var character = N.Meta._(this).cmp<Character>(true);
+                    if (character != null) {
+                        character.FinishedState();
+                        this._active = false;
+                        _playSound();
+                    }
                 }
             }
         }
@@ -72,19 +78,21 @@ namespace GGJ.Actions {
             if (!airbourne) {
                 var character = N.Meta._(this).cmp<Character>();
                 _playSound();
-                if (character.RequestState(MobState.Jump, true)) {
-                    _rb.AddForce(this._up);
-                    _idle = 0;
-                    _active = true;
+                if (character.alive) {
+                    if (character.RequestState(MobState.Jump, true)) {
+                        _rb.AddForce(this._up);
+                        _idle = 0;
+                        _active = true;
 
-                    // Stop anyone who's busy shooting
-                    var shoot = N.Meta._(this).cmp<Shoot>();
-                    shoot.Stop();
+                        // Stop anyone who's busy shooting
+                        var shoot = N.Meta._(this).cmp<Shoot>();
+                        shoot.Stop();
 
-                    // If carrying a box, throw it to jump
-                    if (character.box != null) {
-                        N.Meta._(character.box).cmp<Box>().dispose(this.gameObject);
-                        character.box = null;
+                        // If carrying a box, throw it to jump
+                        if (character.box != null) {
+                            N.Meta._(character.box).cmp<Box>().dispose(this.gameObject);
+                            character.box = null;
+                        }
                     }
                 }
             }
@@ -95,7 +103,6 @@ namespace GGJ.Actions {
             _moveSource.clip = jumpsounds[UnityEngine.Random.Range(0, jumpsounds.Length)];
             _moveSource.volume = 1.0f;
             _moveSource.Play();
-        }    
-    
+        }
     }
 }
