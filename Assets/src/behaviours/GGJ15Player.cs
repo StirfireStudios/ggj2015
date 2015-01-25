@@ -23,9 +23,16 @@ public class GGJ15Player : GGJ15Character {
     new void Start() {
 
         // @todo don't just use the last-updated device!
-        ControllingDevice = InputManager.ActiveDevice;
+        // ControllingDevice = InputManager.ActiveDevice;
 
         base.Start();
+    }
+
+    /**
+     * Set the controlling device.
+     */
+    public void SetControllingDevice(InputDevice device) {
+        ControllingDevice = device;
     }
 
     /**
@@ -34,7 +41,7 @@ public class GGJ15Player : GGJ15Character {
     new void Update() {
 
         // @todo don't just use the last-updated device!
-        ControllingDevice = InputManager.ActiveDevice;
+        //ControllingDevice = InputManager.ActiveDevice;
         if (ControllingDevice != InputDevice.Null)
         {
 
