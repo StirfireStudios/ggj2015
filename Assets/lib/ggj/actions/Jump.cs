@@ -48,9 +48,11 @@ namespace GGJ.Actions {
             if (this._active) {
                 if (_idle > idle_timeout) {
                     airbourne = false;
-                    var character = N.Meta._(this).cmp<Character>();
-                    character.FinishedState();
-                    this._active = false;
+                    var character = N.Meta._(this).cmp<Character>(true);
+                    if (character != null) {
+                        character.FinishedState();
+                        this._active = false;
+                    }
                 }
             }
         }

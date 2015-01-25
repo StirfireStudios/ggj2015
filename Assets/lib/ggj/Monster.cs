@@ -59,6 +59,9 @@ namespace GGJ {
         /** Currently visible? */
         public bool visible;
 
+        /** The amaount of damage we're gonna do with this monster */
+        public float damage;
+
         /** The game object this monster is currently hunting */
         public GameObject target;
 
@@ -89,6 +92,15 @@ namespace GGJ {
             var next = _brain.Update(this, Character.All);
             if (next != null) {
                 _brain = next;
+            }
+        }
+
+        /** When this monster comes in contact with a player, damage that player and render an attack animation */
+        void OnCollisionEnter(Collision collision) {
+            var character = N.Meta._(collision.gameObject).cmp<Character>(true);
+            if (character != null) {
+                this.RequestState(MobState.Attack, true);
+                character.damage(damage);
             }
         }
     }
