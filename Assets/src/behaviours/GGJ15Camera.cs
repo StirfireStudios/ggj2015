@@ -49,9 +49,6 @@ public class GGJ15Camera : MonoBehaviour {
     float OrthoSizeInitial = 0.0f;
 
 	void Start () {
-
-        debugSpherePrefab = Resources.Load<GameObject>("DebugSphere");
-
         ScreenSize.Set(Screen.width, Screen.height);
         ScreenSizeInvFactors.Set(
             1f / ScreenSize.x,
@@ -74,11 +71,6 @@ public class GGJ15Camera : MonoBehaviour {
         WorldSpacePositions = new Vector3[Players.Count()];
 
         CentroidInvFactor = ((float)Players.Count()) / 1.0f;
-
-        if (debugSphereCentroid == null) {
-            debugSphereCentroid = Instantiate(debugSpherePrefab, Vector3.zero, Quaternion.identity) as GameObject;
-            debugSphereCentroid.renderer.material.color = colorCentroid;
-        }
 
         bAlive = true;
     }
@@ -133,18 +125,6 @@ public class GGJ15Camera : MonoBehaviour {
         
         CentroidCenter *= CentroidInvFactor;
         CentroidCenterWorld *= CentroidInvFactor;
-
-        if (debugSphereCentroid != null)
-            debugSphereCentroid.transform.position = CentroidCenterWorld;
-
-        foreach (KeyValuePair<int, GameObject> kvp in ActivePlayers)
-        {
-            Debug.DrawLine(
-                WorldSpacePositions[kvp.Key],
-                CentroidCenterWorld,
-                colorCentroid
-            );
-        }
 
         // Well now.
         // Convert centroid position into -1.0f to 1.0f notation.
