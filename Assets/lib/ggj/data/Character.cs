@@ -16,11 +16,6 @@ namespace GGJ {
     public GameObject box = null;
     private GameObject _box = null;
 
-    public void damage(float damage) {
-      // TODO this or something
-      N.Console.log("Takes damage");
-      N.Meta._(this).cmp<DamageBlip>().activate();
-    }
 
     public void Start() {
         Character.All.Add(this);
