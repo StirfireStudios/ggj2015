@@ -59,7 +59,7 @@ namespace GGJ.Actions {
         public void apply() {
             if (!airbourne) {
                 var character = N.Meta._(this).cmp<Character>();
-                if (character.SetState(MobState.Jump, true)) {
+                if (character.RequestState(MobState.Jump, true)) {
                     _rb.AddForce(this._up);
                     _idle = 0;
                     _active = true;

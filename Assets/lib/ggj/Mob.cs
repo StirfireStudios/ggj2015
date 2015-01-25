@@ -93,14 +93,14 @@ namespace GGJ {
         /**
          * Public setter so we can just use SendMessage / BroadcastMessage
          */
-        public bool SetState(MobState newstate) {
-            return _state.request(newstate);
+        public void SetState(MobState newstate) {
+            _state.request(newstate);
         }
 
         /**
         * Public setter so we can just use SendMessage / BroadcastMessage
         */
-        public bool SetState(MobState newstate, bool wait) {
+        public bool RequestState(MobState newstate, bool wait) {
             return _state.request(newstate, wait);
         }
 
