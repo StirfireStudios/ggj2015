@@ -10,6 +10,9 @@ namespace GGJ.Actions {
         /** Is this component currently active? */
         public bool _active;
 
+        /** What samples do we use to shoot the gun? */
+        public AudioClip[] gunsounds;
+
         /** How long has animation been idle for? */
         private float _idle;
 
@@ -25,9 +28,16 @@ namespace GGJ.Actions {
             _idle = 0;
         }
 
+        private AudioSource _gunSource;
+
         public void Start() {
             _idle = 0f;
             _bulletFactory = Resources.Load("objects/Bullet", typeof(GameObject)) as GameObject;
+            _gunSource = transform.FindChild("GunSound").gameObject.GetComponent<AudioSource>();
+            if (_gunSource == null)
+            {
+                Debug.Log("Warning: Player object shoot action couldn't find gun audio source");
+            }
         }
 
         public void Update() {
@@ -64,6 +74,13 @@ namespace GGJ.Actions {
             instance.transform.position = pos;
             var rb = N.Meta._(instance).cmp<Rigidbody>();
             rb.AddForce(force);
+            _playSound();
+        }
+
+        private void _playSound()
+        {
+            _gunSource.clip = gunsounds[UnityEngine.Random.Range(0, gunsounds.Length)];
+            _gunSource.Play();
         }
     }
 }
