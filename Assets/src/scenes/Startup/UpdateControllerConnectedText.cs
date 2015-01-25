@@ -28,7 +28,7 @@ public class UpdateControllerConnectedText : MonoBehaviour
         {
             Debug.Log("START GAME");
 
-            Application.LoadLevel("Testbench");
+            Application.LoadLevel("Game");
              
             startTime = -1.0f;
         }
