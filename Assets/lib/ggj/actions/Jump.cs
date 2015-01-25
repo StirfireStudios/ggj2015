@@ -93,6 +93,7 @@ namespace GGJ.Actions {
         private void _playSound()
         {
             _moveSource.clip = jumpsounds[UnityEngine.Random.Range(0, jumpsounds.Length)];
+            _moveSource.volume = 1.0f;
             _moveSource.Play();
         }    
     
