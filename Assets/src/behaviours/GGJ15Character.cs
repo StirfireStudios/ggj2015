@@ -113,22 +113,25 @@ public class GGJ15Character : MonoBehaviour {
             }
 
             // Translate.
-            Vector3 Translation = Vector3.forward * Speed * DesiredSpeedFactor * Time.deltaTime;
-            transform.Translate(Translation, Space.Self);
+            if (mob.alive) {
+                Vector3 Translation = Vector3.forward * Speed * DesiredSpeedFactor * Time.deltaTime;
+                transform.Translate(Translation, Space.Self);
 
-            // Process animation.
-            if (SpriterObject != null)
-            {
-                mob.SetState(GGJ.MobState.Move);
-
-                if (Mathf.Abs(DesiredHeading.x) > 0.10f)
+                // Process animation.
+                if (SpriterObject != null)
                 {
-                    // Send a flip message to the billboard, but only if we're
-                    // moving substantially in the X axis.
-                    bool bFlip =
-                        Vector3.Dot(Vector3.right, DesiredHeading) < 0.0f ||
-                        Vector3.Dot(Vector3.right, transform.forward) < 0.0f;
-                    SpriterObject.SendMessage("FlipBillboard", bFlip);
+                    mob.SetState(GGJ.MobState.Move);
+
+                    if (Mathf.Abs(DesiredHeading.x) > 0.10f)
+                    {
+                        // Send a flip message to the billboard, but only if we're
+                        // moving substantially in the X axis.
+                        bool bFlip =
+                            Vector3.Dot(Vector3.right, DesiredHeading) < 0.0f ||
+                            Vector3.Dot(Vector3.right, transform.forward) < 0.0f;
+                        SpriterObject.SendMessage("FlipBillboard", bFlip);
+                        mob.flipped = bFlip;
+                    }
                 }
             }
         }

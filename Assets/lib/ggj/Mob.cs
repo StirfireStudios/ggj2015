@@ -87,14 +87,17 @@ namespace GGJ {
         }
     }
 
-    /// Common behaviours and data for all mobile types
+    /** Common behaviours and data for all mobile types */
     public class Mob : MonoBehaviour {
 
-        /// Amount of HP left on this character
+        /** Amount of HP left on this mob */
         public float hp = 100;
 
-        /// Is this mob actually alive at this point?
+        /** Is this mob actually alive at this point? */
         public bool alive = true;
+
+        /** Is this sprite currently flipped? */
+        public bool flipped = false;
 
         /** State manager */
         protected MobStateBucket _state = new MobStateBucket();
