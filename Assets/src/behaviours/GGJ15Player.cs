@@ -39,45 +39,32 @@ public class GGJ15Player : GGJ15Character {
      * Every tick.
      */
     new void Update() {
+        InputDevice device = ControllingDevice;
+        if (device == InputDevice.Null)
+            device = InputManager.ActiveDevice; 
 
-        // @todo don't just use the last-updated device!
-        //ControllingDevice = InputManager.ActiveDevice;
-        if (ControllingDevice != InputDevice.Null)
-        {
-
-            // Support moving with left stick or dpad.
-            _mvec_ls.Set(
-                ControllingDevice.LeftStickX,
-                0.0f,
-                ControllingDevice.LeftStickY
-            );
-            _mvec_dp.Set(
-                ControllingDevice.DPad.X,
-                0.0f,
-                ControllingDevice.DPad.Y
-            );
-            base.DesiredHeading = (_mvec_ls + _mvec_dp);
-            base.DesiredSpeedFactor = Mathf.Clamp(base.DesiredHeading.magnitude, 0.0f, 1.0f);
-            base.DesiredHeading.Normalize();
-
-        }
+        
+        // Support moving with left stick or dpad.
+        _mvec_ls.Set(
+            device.LeftStickX,
+            0.0f,
+            device.LeftStickY
+        );
+        _mvec_dp.Set(
+            device.DPad.X,
+            0.0f,
+            device.DPad.Y
+        );
+        base.DesiredHeading = (_mvec_ls + _mvec_dp);
+        base.DesiredSpeedFactor = Mathf.Clamp(base.DesiredHeading.magnitude, 0.0f, 1.0f);
+        base.DesiredHeading.Normalize();
 
         base.Update();
 
-        // TODO: Fold into controller
-        debugKeys();
-    }
-
-    /**
-     * Simplistic key binding for testing
-     * TODO: Replace this with proper controller binding in Update()
-     */
-    private void debugKeys() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            gameObject.GetComponent<GGJ.Actions.Jump>().apply();
-        };
-        if (Input.GetKeyDown(KeyCode.Return)) {
+        if (device.Action1)
             gameObject.GetComponent<GGJ.Actions.Shoot>().apply();
-        };
+        
+        if (device.Action2)
+            gameObject.GetComponent<GGJ.Actions.Jump>().apply();
     }
 }
