@@ -18,8 +18,18 @@ public class GameSpawner : MonoBehaviour {
         gc.DebugMeh();
 
         LevelInfo = GameObject.FindGameObjectWithTag("LevelInfo");
-        ObjectContainer = LevelInfo.transform.FindChild("Objects").gameObject;
-
+        if (LevelInfo) {
+            var child = LevelInfo.transform.FindChild("Objects");
+            if (child) {
+                ObjectContainer = child.gameObject;
+            }
+        }
+        if (LevelInfo == null) {
+            Debug.Log("Unable to find LevelInfo object on scene");
+        }
+        if (LevelInfo == null) {
+            Debug.Log("Unable to find LevelInfo object children on scene");
+        }
 
         // spawn in what we need!
         foreach (KeyValuePair<InputDevice, GGJ.Data.CharacterInfo.Type> kvp in gc.DeviceCharMapping)
@@ -41,7 +51,7 @@ public class GameSpawner : MonoBehaviour {
             spriterobj.transform.SetParent(player.transform);
             player.name = chtype.Name;
             player.SendMessage("SetControllingDevice", kvp.Key);
-            
+
             player.transform.SetParent(ObjectContainer.transform);
         }
 
@@ -49,7 +59,7 @@ public class GameSpawner : MonoBehaviour {
         Camera.main.SendMessage("StartWatchingPlayers");
 
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 	    NumDevices = InputManager.Devices.Count;

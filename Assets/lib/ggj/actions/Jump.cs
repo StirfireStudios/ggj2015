@@ -39,7 +39,11 @@ namespace GGJ.Actions {
             airbourne = false;
             _up = up.normalized * magnitude;
             _rb = N.Meta._(this).cmp<Rigidbody>();
-            _moveSource = transform.FindChild("MovementSound").gameObject.GetComponent<AudioSource>();
+
+            var child = transform.FindChild("MovementSound");
+            if (child) {
+                _moveSource = child.gameObject.GetComponent<AudioSource>();
+            }
             if (_moveSource == null)
             {
                 Debug.Log("Warning: Player object shoot action couldn't find movement audio source");

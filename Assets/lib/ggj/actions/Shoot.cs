@@ -42,7 +42,10 @@ namespace GGJ.Actions {
         public void Start() {
             _idle = 0f;
             _bulletFactory = Resources.Load("objects/Bullet", typeof(GameObject)) as GameObject;
-            _gunSource = transform.FindChild("GunSound").gameObject.GetComponent<AudioSource>();
+            var child = transform.FindChild("MovementSound");
+            if (child) {
+                _gunSource = child.gameObject.GetComponent<AudioSource>();
+            }
             if (_gunSource == null)
             {
                 Debug.Log("Warning: Player object shoot action couldn't find gun audio source");

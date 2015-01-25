@@ -32,7 +32,10 @@ public class GGJ15Player : GGJ15Character {
      * On instantiation.
      */
     new void Start() {
-        _moveSource = transform.FindChild("MovementSound").gameObject.GetComponent<AudioSource>();
+        var child = transform.FindChild("MovementSound");
+        if (child) {
+            _moveSource = child.gameObject.GetComponent<AudioSource>();
+        }
         if (_moveSource == null)
         {
             Debug.Log("Warning: Player object shoot action couldn't find movement audio source");
@@ -54,9 +57,9 @@ public class GGJ15Player : GGJ15Character {
     new void Update() {
         InputDevice device = ControllingDevice;
         if (device == InputDevice.Null)
-            device = InputManager.ActiveDevice; 
+            device = InputManager.ActiveDevice;
 
-        
+
         // Support moving with left stick or dpad.
         _mvec_ls.Set(
             device.LeftStickX,
@@ -76,7 +79,7 @@ public class GGJ15Player : GGJ15Character {
 
         if (device.Action1)
             gameObject.GetComponent<GGJ.Actions.Shoot>().apply();
-        
+
         if (device.Action2)
             gameObject.GetComponent<GGJ.Actions.Jump>().apply();
 
@@ -84,15 +87,19 @@ public class GGJ15Player : GGJ15Character {
         {
             if (Time.time - lastWalkSamplePlayed > WalkSampleDelay)
             {
-                _moveSource.clip = movesounds[UnityEngine.Random.Range(0, movesounds.Length)];
-                _moveSource.volume = WalkSampleVolume;
-                _moveSource.Play();
-                lastWalkSamplePlayed = Time.time;
+                if ((movesounds != null) && (movesounds.Length > 0)) {
+                    _moveSource.clip = movesounds[UnityEngine.Random.Range(0, movesounds.Length)];
+                    _moveSource.volume = WalkSampleVolume;
+                    _moveSource.Play();
+                    lastWalkSamplePlayed = Time.time;
+                }
             }
         }
         else
         {
-            _moveSource.Stop();
+            if (_moveSource != null) {
+                _moveSource.Stop();
+            }
         }
 
     }
