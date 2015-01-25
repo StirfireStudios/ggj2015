@@ -49,7 +49,6 @@ namespace GGJ.Actions {
             _active = true;
             _idle = 0f;
             mob.alive = false;
-            N.Console.log("Death state");
         }
     }
 }

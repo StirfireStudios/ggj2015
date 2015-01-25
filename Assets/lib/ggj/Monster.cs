@@ -23,7 +23,6 @@ namespace GGJ {
     public class IdleWaitBehaviour : IMonsterBehaviour {
         public IMonsterBehaviour Update(Monster self, List<Character> characters) {
             if (self.visible) {
-                N.Console.log("Monster wakes");
                 return new RunAndKillBehaviour();
             }
             return null;
@@ -37,7 +36,6 @@ namespace GGJ {
             // Cull dead targets
             if ((self.target) && (!self.target.alive)) {
                 self.target = null;
-                N.Console.log("Monster has no target");
                 var controller = N.Meta._(self).cmp<GGJ15Character>();
                 controller.DesiredSpeedFactor = 0f;
             }
@@ -56,7 +54,6 @@ namespace GGJ {
                         target = characters[i];
                     }
                 }
-                N.Console.log("Monster seeks " + target);
                 self.target = target;
             }
 
@@ -120,9 +117,9 @@ namespace GGJ {
             target = null;
         }
 
-
         public void OnDestroy() {
             Monster.All.Remove(this);
+            MonsterSpawner.spawned -= 1;
         }
 
         public void Update() {

@@ -136,13 +136,11 @@ namespace GGJ {
 
         /** Mob took damage */
         public void damage(float damage) {
-            N.Console.log(gameObject + " takes damage");
             var blips = gameObject.GetComponentsInChildren<DamageBlip>();
             for (var i = 0; i < blips.Length; ++i) {
                 blips[i].activate();
             }
             this.hp -= damage;
-            N.Console.log(gameObject + "'s new health is: " + hp);
             if (hp <= 0) {
                 N.Console.log(gameObject +  " dies");
                 N.Meta._(this).cmp<Die>().apply();
