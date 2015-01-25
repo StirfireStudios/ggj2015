@@ -23,19 +23,25 @@ namespace GGJ {
         void Update () {
         }
 
+
         /** When this box comes in contact with a player, pick up the box */
         void OnCollisionEnter(Collision collision) {
             var character = N.Meta._(collision.gameObject).cmp<Character>(true);
             if (character != null) {
                 character.box = this.gameObject;
+                bDelivering = false;
                 this.gameObject.SetActive(false);
             }
             else {
-                var rb = N.Meta._(this).cmp<Rigidbody>();
-                var down = Math.Abs(rb.velocity.y);
-                if (down > threshold) {
-                    N.Meta._(this).destroy();
-                    N.Console.log("Lost a crate!");
+
+                if (!bDelivering) {
+
+                    var rb = N.Meta._(this).cmp<Rigidbody>();
+                    var down = Math.Abs(rb.velocity.y);                
+                    if (down > threshold) {
+                        N.Meta._(this).destroy();
+                        N.Console.log("Lost a crate!");
+                    }
                 }
             }
         }
@@ -50,6 +56,14 @@ namespace GGJ {
             if (rb != null) {
                 rb.AddForce(new Vector3(0, force_up, 0));
             }
+        }
+
+        bool bDelivering = false;
+
+        // We're delivering a box!
+        public void deliver(GameObject root) {
+            gameObject.SetActive(true);
+            dispose(root);
         }
     }
 }

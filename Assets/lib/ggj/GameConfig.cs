@@ -7,7 +7,7 @@ using InControl;
 
 namespace GGJ
 {
-
+    // @todo rename this class?
     public class GameConfig
     {
         static GameConfig instance;
@@ -28,6 +28,8 @@ namespace GGJ
 				return DeviceCharMapping.Count;
 			}
 		}
+
+        public List<GameObject> BoxesReturned = new List<GameObject>();
 
         public Dictionary<InputDevice, Data.CharacterInfo.Type> DeviceCharMapping { get; protected set; }
 
