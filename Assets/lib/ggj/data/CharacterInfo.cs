@@ -43,6 +43,7 @@ namespace GGJ.Data
 			CharacterInfo charInfo = new CharacterInfo();
 			charInfo.Name = "Chelsea Jackson";
             charInfo.CharacterType = Type.ChelseaJackson;
+            charInfo.PortraitResource = "Sprites/Chelsea/Head_Guy";
             charInfo.SpriteResource = "SpriterObjects/ChelseaJackson";
 			return charInfo;
 		}
