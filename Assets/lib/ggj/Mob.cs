@@ -48,7 +48,6 @@ namespace GGJ {
                 return false;
             }
             if (state == _state) {
-                N.Console.log("Duplicate");
                 return false;
             }
             _requested = state;

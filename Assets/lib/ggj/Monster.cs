@@ -98,8 +98,11 @@ namespace GGJ {
 
         /** When this monster comes in contact with a player, damage that player and render an attack animation */
         void OnCollisionEnter(Collision collision) {
+            N.Console.log("Collision with life state of:" + this.alive);
             if (this.alive) {
-                var character = N.Meta._(collision.gameObject).cmp<Character>(true);
+                N.Console.log(collision.gameObject);
+                var character = N.Meta._(collision.gameObject).cmp<Character>();
+                N.Console.log("Character: " + character);
                 if (character != null) {
                     var attack = N.Meta._(this).cmp<Attack>(true);
                     if (attack != null) {
