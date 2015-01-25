@@ -41,13 +41,14 @@ namespace GGJ.Actions {
 
         /** Trigger this effect on the target */
         public void apply() {
-            Mob mob = N.Meta._(this).cmp<Monster>();
+            Mob mob = N.Meta._(this).cmp<Monster>(true);
             if (mob == null) {
-                mob = N.Meta._(this).cmp<Character>();
+                mob = N.Meta._(this).cmp<Character>(true);
             }
             mob.ForceState(MobState.Dead);
             _active = true;
             _idle = 0f;
+            mob.alive = false;
             N.Console.log("Death state");
         }
     }

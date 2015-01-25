@@ -40,11 +40,9 @@ namespace GGJ {
         */
         public bool request(MobState state, bool wait) {
             if (_waiting) {
-                N.Console.log("Waiting");
                 return false;
             }
             if (_requested != MobState.None) {
-                N.Console.log("Busy: " + _requested);
                 return false;
             }
             if (state == _state) {

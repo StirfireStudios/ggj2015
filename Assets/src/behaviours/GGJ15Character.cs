@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using N;
 
 /**
  * A class for all moving characters to inherit from.

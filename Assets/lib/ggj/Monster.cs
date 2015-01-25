@@ -33,6 +33,16 @@ namespace GGJ {
     /** Basic run and kill closest target behaviour */
     public class RunAndKillBehaviour : IMonsterBehaviour {
         public IMonsterBehaviour Update(Monster self, List<Character> characters) {
+
+            // Cull dead targets
+            if ((self.target) && (!self.target.alive)) {
+                self.target = null;
+                N.Console.log("Monster has no target");
+                var controller = N.Meta._(self).cmp<GGJ15Character>();
+                controller.DesiredSpeedFactor = 0f;
+            }
+
+            // Find new target
             if ((characters.Count > 0) && (self.target == null)) {
                 var min = Vector3.Distance(characters[0].transform.position, self.transform.position);
                 var target = characters[0];
@@ -44,12 +54,27 @@ namespace GGJ {
                     }
                 }
                 N.Console.log("Monster seeks " + target);
-                self.target = target.gameObject;
-
-                // Run towards target if further than attack distance
-
-                // If closer than attack distance, ATTTAAAAACCKK RARRRRRARARRrrrr~
+                self.target = target;
             }
+
+            // Move towards target
+            if (self.target != null) {
+                var controller = N.Meta._(self).cmp<GGJ15Character>();
+                var heading = self.target.gameObject.transform.position - self.transform.position;
+                controller.DesiredHeading = heading;
+                controller.DesiredHeading.Normalize();
+                controller.DesiredSpeedFactor = self.move_speed;
+
+                // If close, attack
+                var dist = Vector3.Distance(self.target.transform.position, self.transform.position);
+                if (dist < self.bounding_attack_distance) {
+                    var attack = N.Meta._(self).cmp<Attack>(true);
+                    if (attack != null) {
+                        attack.apply(self.target);
+                    }
+                }
+            }
+
             return null;
         }
     }
@@ -60,8 +85,14 @@ namespace GGJ {
         /** Currently visible? */
         public bool visible;
 
+        /** Bounding attack distance to hit players */
+        public float bounding_attack_distance = 4f;
+
+        /** How fast should this monster move */
+        public float move_speed = 0.5f;
+
         /** The game object this monster is currently hunting */
-        public GameObject target;
+        public Character target;
 
         /** The behaviour we're currently using */
         private IMonsterBehaviour _brain;
@@ -97,11 +128,10 @@ namespace GGJ {
         }
 
         /** When this monster comes in contact with a player, damage that player and render an attack animation */
-        void OnCollisionEnter(Collision collision) {
+        /*void OnCollisionEnter(Collision collision) {
             if (this.alive) {
-                N.Console.log(collision.gameObject);
                 var character = N.Meta._(collision.gameObject).cmp<Character>();
-                if (character.alive) {
+                if ((character != null) && (character.alive)) {
                     if (character != null) {
                         var attack = N.Meta._(this).cmp<Attack>(true);
                         if (attack != null) {
@@ -111,6 +141,6 @@ namespace GGJ {
                     }
                 }
             }
-        }
+        }*/
     }
 }
