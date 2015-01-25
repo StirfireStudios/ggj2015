@@ -32,7 +32,21 @@ public class GGJ15Camera : MonoBehaviour {
     Vector3 CentroidCenter = Vector3.zero;
     float CentroidInvFactor = 0.0f;
 
+    bool bAlive = false;
+
 	void Start () {
+
+        ScreenSize.Set(Screen.width, Screen.height);
+        ScreenSizeInvFactors.Set(
+            1f / ScreenSize.x,
+            1f / ScreenSize.y
+        );
+        ScreenCenter = ScreenSize * 0.5f;      
+
+	}
+
+    void StartWatchingPlayers()
+    {
         Players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < Players.Count(); i++)
         {
@@ -42,14 +56,17 @@ public class GGJ15Camera : MonoBehaviour {
 
         CentroidInvFactor = ((float)Players.Count()) / 1.0f;
 
-        ScreenSize.Set(Screen.width, Screen.height);
-        ScreenSizeInvFactors.Set(
-            1f / ScreenSize.x,
-            1f / ScreenSize.y
-        );
-        ScreenCenter = ScreenSize * 0.5f;
-	}
+        bAlive = true;
+    }
+
+    void StopWatchingPlayers() {
+    }
+
 	void LateUpdate () {
+
+        if (!bAlive)
+            return;
+
         // Only care about active players.
         KeyValuePair<int, GameObject>[] ActivePlayers = PlayersByIdx.Where(kvp => kvp.Value.activeInHierarchy).ToArray();
 

@@ -5,29 +5,61 @@ using InControl;
 public class UpdateCharacterSelect : MonoBehaviour
 {
 	public GameObject CharacterSelectPrefab;
-	
+
+    public void Awake()
+    {
+        DeviceAttachHandler = new System.Action<InputDevice>(ShowPanel);
+        DeviceDetachHandler = new System.Action<InputDevice>(HidePanel);
+    }
+
 	public void Start ()
 	{
-		InputManager.OnDeviceAttached += new System.Action<InputDevice>(ShowPanel);
-		InputManager.OnDeviceDetached += new System.Action<InputDevice>(HidePanel);
+        InputManager.OnDeviceAttached += DeviceAttachHandler;
+        InputManager.OnDeviceDetached += DeviceDetachHandler;
 		foreach (InputDevice device in InputManager.Devices)
 		{
-			ShowPanel (device);
+            if (device.Name == "Keyboard/Mouse")
+            {
+                keyboard = device;
+            }
+            else
+            {
+                ShowPanel(device);
+            } 
 		}
-
-
 	}
-	
+
+    public void Update()
+    {
+        if (keyboardOn)
+        {
+            if (keyboard.Action2)
+            {
+                HidePanel(keyboard);                
+                keyboardOn = false;
+                SendMessageUpwards("OnKeyboardDisabled");
+            }
+        }
+        else
+        {
+            if (keyboard.Action1)
+            {
+                ShowPanel(keyboard);
+                keyboardOn = true;
+                SendMessageUpwards("OnKeyboardEnabled");
+            }
+        }
+    }
+
+    public void OnDestroy()
+    {
+        InputManager.OnDeviceAttached -= DeviceAttachHandler;
+        InputManager.OnDeviceDetached -= DeviceDetachHandler;
+    }
+
 	public void ShowPanel(InputDevice device)
 	{
 		GameObject panel = GetPanelFor (device, true);
-		if (characterSelectors.ContainsKey (device))
-		{
-			panel = (GameObject)GameObject.Instantiate(CharacterSelectPrefab);
-		} else
-		{
-			panel = characterSelectors[device];
-		}
 		panel.SetActive(true);
 	}
 	
@@ -39,8 +71,6 @@ public class UpdateCharacterSelect : MonoBehaviour
 			panel.SetActive(false);
 		}
 	}
-	
-
 
 	private GameObject GetPanelFor(InputDevice device)
 	{
@@ -70,4 +100,7 @@ public class UpdateCharacterSelect : MonoBehaviour
 	}
 
 	private System.Collections.Generic.Dictionary<InputDevice, GameObject> characterSelectors = new System.Collections.Generic.Dictionary<InputDevice, GameObject>();
+    private bool keyboardOn = false;
+    private InputDevice keyboard;
+    private System.Action<InputDevice> DeviceAttachHandler, DeviceDetachHandler;
 }

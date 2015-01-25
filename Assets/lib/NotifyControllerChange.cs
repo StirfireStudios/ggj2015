@@ -5,16 +5,31 @@ using InControl;
 public class NotifyControllerChange : MonoBehaviour
 {
 
+    public void Awake()
+    {
+        handleEvent = new System.Action<InputDevice>(SendDeviceListChange);
+    }
+
 	public void Start ()
 	{
-		InputManager.OnDeviceAttached += new System.Action<InputDevice>(SendDeviceListChange);
-		InputManager.OnDeviceDetached += new System.Action<InputDevice>(SendDeviceListChange);
+        InputManager.OnDeviceAttached += handleEvent;
+        InputManager.OnDeviceDetached += handleEvent;
 		this.SendMessage("OnNumControllersChanged", InputManager.Devices.Count, SendMessageOptions.DontRequireReceiver);
 	}
 
 	public void SendDeviceListChange(InputDevice device)
 	{
-		this.SendMessage("OnNumControllersChanged", InputManager.Devices.Count, SendMessageOptions.DontRequireReceiver);
+        if (this != null)
+        {
+            this.SendMessage("OnNumControllersChanged", InputManager.Devices.Count, SendMessageOptions.DontRequireReceiver);
+        }
 	}
-	
+
+    public void onDestroy()
+    {
+        InputManager.OnDeviceAttached -= handleEvent;
+        InputManager.OnDeviceDetached -= handleEvent;
+    }
+
+    private System.Action<InputDevice> handleEvent;
 }
