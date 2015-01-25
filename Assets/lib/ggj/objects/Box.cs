@@ -47,14 +47,15 @@ namespace GGJ {
         }
 
         /** Character has chosen to get rid of this box, throw it into the air */
-        public void dispose(GameObject root) {
+        public void dispose(GameObject root, bool flip) {
             this.gameObject.SetActive(true);
             var t = root.transform.position;
             t.y += offset_up;
+            var forward = flip ? -200f : 200f;
             this.gameObject.transform.position = t;
             var rb = N.Meta._(this).cmp<Rigidbody>();
             if (rb != null) {
-                rb.AddForce(new Vector3(0, force_up, 0));
+                rb.AddForce(new Vector3(forward, force_up, 0));
             }
         }
 
