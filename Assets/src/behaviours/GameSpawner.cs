@@ -4,15 +4,22 @@ using System.Collections.Generic;
 using InControl;
 using GGJ;
 
-public class InputWrangler : MonoBehaviour {
+public class GameSpawner : MonoBehaviour {
 
     int NumDevices = 0;
 
     GGJ.GameConfig gc = GGJ.GameConfig.Instance;
 
+    GameObject LevelInfo;
+    GameObject ObjectContainer;
+
 	// Use this for initialization
 	void Start () {
         gc.DebugMeh();
+
+        LevelInfo = GameObject.FindGameObjectWithTag("LevelInfo");
+        ObjectContainer = LevelInfo.transform.FindChild("Objects").gameObject;
+
 
         // spawn in what we need!
         foreach (KeyValuePair<InputDevice, GGJ.Data.CharacterInfo.Type> kvp in gc.DeviceCharMapping)
@@ -34,19 +41,8 @@ public class InputWrangler : MonoBehaviour {
             spriterobj.transform.SetParent(player.transform);
             player.name = chtype.Name;
             player.SendMessage("SetControllingDevice", kvp.Key);
-
-            //ControllingDevice
-
-
-            // Instantiate a SpaceGuy.
             
-            //sg.transform.SetParent(go.transform);
-
-            
-            //Instantiate(go)
-            
-
-
+            player.transform.SetParent(ObjectContainer.transform);
         }
 
         // tell the camera to start watching players

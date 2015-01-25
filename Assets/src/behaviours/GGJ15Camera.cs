@@ -10,6 +10,9 @@ public class GGJ15Camera : MonoBehaviour {
     private float _horizsafearea = 0.45f;
     public float HorizontalSafeArea = 0.9f;
 
+    public float MaxOrthoUnzoomFactor = 1.25f;
+    public float ZoomSpeed = 3.5f;
+
     [Flags]
     private enum Scroll {
         None =      0,
@@ -41,6 +44,8 @@ public class GGJ15Camera : MonoBehaviour {
     GameObject debugSphereCentroid;
     Color colorCentroid = Color.cyan;
 
+    float OrthoSizeInitial = 0.0f;
+
 	void Start () {
 
         debugSpherePrefab = Resources.Load<GameObject>("DebugSphere");
@@ -50,7 +55,9 @@ public class GGJ15Camera : MonoBehaviour {
             1f / ScreenSize.x,
             1f / ScreenSize.y
         );
-        ScreenCenter = ScreenSize * 0.5f;      
+        ScreenCenter = ScreenSize * 0.5f;
+
+        OrthoSizeInitial = camera.orthographicSize;
 
 	}
 
@@ -121,7 +128,7 @@ public class GGJ15Camera : MonoBehaviour {
                 }
             }
         }
-
+        
         CentroidCenter *= CentroidInvFactor;
         CentroidCenterWorld *= CentroidInvFactor;
 
@@ -152,8 +159,34 @@ public class GGJ15Camera : MonoBehaviour {
 
         if (NecessaryScroll != Scroll.None)
         {
-            // this needs to change!
-            transform.Translate(CentroidCenterN * Time.deltaTime * 2.0f);        
+            // man at this point why did we even use a bitmask :V
+            bool ScrollXPos = (NecessaryScroll & Scroll.XPositive) == Scroll.XPositive;
+            bool ScrollXNeg = (NecessaryScroll & Scroll.XNegative) == Scroll.XNegative;
+
+            // move the camera!
+            transform.Translate(CentroidCenterN * Time.deltaTime * 2.0f);
+
+            if (ScrollXPos && ScrollXNeg)
+            {
+                // hrrrrrrm, a zoom might be necessary.                
+                if (!Mathf.Approximately(camera.orthographicSize, OrthoSizeInitial * MaxOrthoUnzoomFactor)) {
+                    UpdateScreenSize(camera.orthographicSize + (ZoomSpeed * Time.deltaTime));
+                    Debug.Log("A");
+                }
+            }
+            else
+            {
+                if (!Mathf.Approximately(camera.orthographicSize, OrthoSizeInitial)) {
+                    UpdateScreenSize(camera.orthographicSize + (-ZoomSpeed * Time.deltaTime));
+                    Debug.Log("B");
+                }
+            }
+        }
+        else {
+            if (!Mathf.Approximately(camera.orthographicSize, OrthoSizeInitial)) {
+                UpdateScreenSize(camera.orthographicSize + (-ZoomSpeed * Time.deltaTime));
+                Debug.Log("C");
+            }
         }
 
 
@@ -193,7 +226,7 @@ public class GGJ15Camera : MonoBehaviour {
 
     private void UpdateScreenSize(float f)
     {
-        camera.orthographicSize = f;
+        camera.orthographicSize = Mathf.Clamp(f, OrthoSizeInitial, OrthoSizeInitial * MaxOrthoUnzoomFactor);
         ScreenSize.Set(Screen.width, Screen.height);
         ScreenSizeInvFactors.Set(
             1f / ScreenSize.x,
