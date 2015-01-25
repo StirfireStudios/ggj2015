@@ -22,6 +22,7 @@ public class GGJ15Camera : MonoBehaviour {
     
     Vector2 ScreenSize = Vector2.zero;
     Vector2 ScreenSizeInvFactors = Vector2.zero;
+    Vector3[] WorldSpacePositions;
     Vector2[] ScreenSpacePositions;
     GameObject[] Players;
     Dictionary<int, GameObject> PlayersByIdx = new Dictionary<int, GameObject>();
@@ -29,12 +30,20 @@ public class GGJ15Camera : MonoBehaviour {
     Vector2 ScreenCenter = Vector2.zero;
 
     // Centroid position, in raw screen-space pixels.
+    Vector3 CentroidCenterWorld = Vector3.zero;
     Vector3 CentroidCenter = Vector3.zero;
     float CentroidInvFactor = 0.0f;
 
     bool bAlive = false;
 
+    GameObject debugSpherePrefab;
+
+    GameObject debugSphereCentroid;
+    Color colorCentroid = Color.cyan;
+
 	void Start () {
+
+        debugSpherePrefab = Resources.Load<GameObject>("DebugSphere");
 
         ScreenSize.Set(Screen.width, Screen.height);
         ScreenSizeInvFactors.Set(
@@ -53,8 +62,14 @@ public class GGJ15Camera : MonoBehaviour {
             PlayersByIdx.Add(i, Players[i]);
         }
         ScreenSpacePositions = new Vector2[Players.Count()];
+        WorldSpacePositions = new Vector3[Players.Count()];
 
         CentroidInvFactor = ((float)Players.Count()) / 1.0f;
+
+        if (debugSphereCentroid == null) {
+            debugSphereCentroid = Instantiate(debugSpherePrefab, Vector3.zero, Quaternion.identity) as GameObject;
+            debugSphereCentroid.renderer.material.color = colorCentroid;
+        }
 
         bAlive = true;
     }
@@ -69,16 +84,22 @@ public class GGJ15Camera : MonoBehaviour {
 
         // Only care about active players.
         KeyValuePair<int, GameObject>[] ActivePlayers = PlayersByIdx.Where(kvp => kvp.Value.activeInHierarchy).ToArray();
+        CentroidInvFactor = 1f / (float)ActivePlayers.Count();
 
         CentroidCenter = Vector2.zero;
+        CentroidCenterWorld = Vector3.zero;
         NecessaryScroll = Scroll.None;
 
         foreach (KeyValuePair<int, GameObject> kvp in ActivePlayers)
         {
             // Debug.Log(string.Format("{0}\t{1}", kvp.Value.name, gameObject.camera.WorldToScreenPoint(kvp.Value.transform.position)));
-            Vector3 sspoint = gameObject.camera.WorldToScreenPoint(kvp.Value.transform.position);
+            Vector3 wpoint = kvp.Value.transform.position;
+            Vector3 sspoint = gameObject.camera.WorldToScreenPoint(wpoint);
             
             // Accumulate the centroid (which I guess we'll have be raw for now?)
+            CentroidCenterWorld += wpoint;
+            WorldSpacePositions[kvp.Key] = wpoint;
+
             CentroidCenter += sspoint;
 
             // Normalize all SS positions into the -1.0f to 1.0f range.
@@ -100,6 +121,43 @@ public class GGJ15Camera : MonoBehaviour {
                 }
             }
         }
+
+        CentroidCenter *= CentroidInvFactor;
+        CentroidCenterWorld *= CentroidInvFactor;
+
+        if (debugSphereCentroid != null)
+            debugSphereCentroid.transform.position = CentroidCenterWorld;
+
+        foreach (KeyValuePair<int, GameObject> kvp in ActivePlayers)
+        {
+            Debug.DrawLine(
+                WorldSpacePositions[kvp.Key],
+                CentroidCenterWorld,
+                colorCentroid
+            );
+        }
+
+        // Well now.
+        // Convert centroid position into -1.0f to 1.0f notation.
+        Vector3 CentroidCenterN = new Vector3(
+            (CentroidCenter.x * ScreenSizeInvFactors.x) - 0.5f,
+            0.0f,
+            0.0f// (CentroidCenter.y * ScreenSizeInvFactors.y) - 0.5f
+        ).normalized;
+        Debug.DrawLine(
+            transform.position,
+            transform.position + (4.0f * CentroidCenterN),
+            Color.green
+        );
+
+        if (NecessaryScroll != Scroll.None)
+        {
+            // this needs to change!
+            transform.Translate(CentroidCenterN * Time.deltaTime * 2.0f);        
+        }
+
+
+        /*
 
         // Okay, now...
         if (NecessaryScroll != Scroll.None) {
@@ -126,6 +184,7 @@ public class GGJ15Camera : MonoBehaviour {
 
             Debug.Log(string.Format("[{2}] centroid: {0}\tcam: {1}", CentroidCenterN, ScreenCenter, Enum.GetName(typeof(Scroll), NecessaryScroll)));
         }
+         * */
 	}
 
     void OnValidate() {
