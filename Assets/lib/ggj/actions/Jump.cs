@@ -62,6 +62,7 @@ namespace GGJ.Actions {
                     var character = N.Meta._(this).cmp<Character>();
                     character.FinishedState();
                     this._active = false;
+                    _playSound();
                 }
             }
         }
