@@ -8,6 +8,17 @@ using N;
  */
 public class GGJ15Player : GGJ15Character {
 
+    /** What samples do we use for moving? */
+    public AudioClip[] movesounds;
+    public float WalkSampleDelay;
+    public float WalkSampleVolume;
+
+    /** Playback source for movement sounds **/
+    private AudioSource _moveSource;
+
+    private bool playerIsWalking;
+    private float lastWalkSamplePlayed;
+
     /**
      * The InputDevice controlling this player.
      */
@@ -21,9 +32,11 @@ public class GGJ15Player : GGJ15Character {
      * On instantiation.
      */
     new void Start() {
-
-        // @todo don't just use the last-updated device!
-        // ControllingDevice = InputManager.ActiveDevice;
+        _moveSource = transform.FindChild("MovementSound").gameObject.GetComponent<AudioSource>();
+        if (_moveSource == null)
+        {
+            Debug.Log("Warning: Player object shoot action couldn't find movement audio source");
+        }
 
         base.Start();
     }
@@ -66,5 +79,31 @@ public class GGJ15Player : GGJ15Character {
         
         if (device.Action2)
             gameObject.GetComponent<GGJ.Actions.Jump>().apply();
+
+        if (playerIsWalking)
+        {
+            if (Time.time - lastWalkSamplePlayed > WalkSampleDelay)
+            {
+                _moveSource.clip = movesounds[UnityEngine.Random.Range(0, movesounds.Length)];
+                _moveSource.volume = WalkSampleVolume;
+                _moveSource.Play();
+                lastWalkSamplePlayed = Time.time;
+            }
+        }
+        else
+        {
+            _moveSource.Stop();
+        }
+
+    }
+
+    public void OnPlayerWalkStart()
+    {
+        playerIsWalking = true;
+    }
+
+    public void OnPlayerWalkStop()
+    {
+        playerIsWalking = false;
     }
 }

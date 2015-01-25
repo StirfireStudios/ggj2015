@@ -41,6 +41,14 @@ namespace GGJ {
             _state.request(old);
             N.Meta._(gameObject).cmp<Animator>().Play(_stateId(_state.next()));
         }
+        if (next == MobState.Move)
+        {
+            SendMessageUpwards("OnPlayerWalkStart");
+        }
+        else if ((next != MobState.None) && (old == MobState.Move))
+        {
+            SendMessageUpwards("OnPlayerWalkStop");
+        }
     }
 
     /// Return the state id for the given state code

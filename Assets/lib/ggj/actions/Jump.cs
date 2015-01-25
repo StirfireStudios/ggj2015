@@ -28,11 +28,22 @@ namespace GGJ.Actions {
         /** Idly time */
         private float _idle;
 
+        /** What samples do we use for jumping? */
+        public AudioClip[] jumpsounds;
+
+        /** Playback source for movement sounds **/
+        private AudioSource _moveSource;
+
         /** Setup; not jumping */
         public void Start() {
             airbourne = false;
             _up = up.normalized * magnitude;
             _rb = N.Meta._(this).cmp<Rigidbody>();
+            _moveSource = transform.FindChild("MovementSound").gameObject.GetComponent<AudioSource>();
+            if (_moveSource == null)
+            {
+                Debug.Log("Warning: Player object shoot action couldn't find movement audio source");
+            }
         }
 
         /** Check if still jumping for idle motion */
@@ -51,6 +62,7 @@ namespace GGJ.Actions {
                     var character = N.Meta._(this).cmp<Character>();
                     character.FinishedState();
                     this._active = false;
+                    _playSound();
                 }
             }
         }
@@ -59,6 +71,7 @@ namespace GGJ.Actions {
         public void apply() {
             if (!airbourne) {
                 var character = N.Meta._(this).cmp<Character>();
+                _playSound();
                 if (character.RequestState(MobState.Jump, true)) {
                     _rb.AddForce(this._up);
                     _idle = 0;
@@ -76,5 +89,13 @@ namespace GGJ.Actions {
                 }
             }
         }
+
+        private void _playSound()
+        {
+            _moveSource.clip = jumpsounds[UnityEngine.Random.Range(0, jumpsounds.Length)];
+            _moveSource.volume = 1.0f;
+            _moveSource.Play();
+        }    
+    
     }
 }
