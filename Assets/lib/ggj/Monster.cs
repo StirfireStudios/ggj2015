@@ -60,17 +60,19 @@ namespace GGJ {
             // Move towards target
             if (self.target != null) {
                 var controller = N.Meta._(self).cmp<GGJ15Character>();
-                var heading = self.target.gameObject.transform.position - self.transform.position;
-                controller.DesiredHeading = heading;
-                controller.DesiredHeading.Normalize();
-                controller.DesiredSpeedFactor = self.move_speed;
+                if (controller != null) {
+                    var heading = self.target.gameObject.transform.position - self.transform.position;
+                    controller.DesiredHeading = heading;
+                    controller.DesiredHeading.Normalize();
+                    controller.DesiredSpeedFactor = self.move_speed;
 
-                // If close, attack
-                var dist = Vector3.Distance(self.target.transform.position, self.transform.position);
-                if (dist < self.bounding_attack_distance) {
-                    var attack = N.Meta._(self).cmp<Attack>(true);
-                    if (attack != null) {
-                        attack.apply(self.target);
+                    // If close, attack
+                    var dist = Vector3.Distance(self.target.transform.position, self.transform.position);
+                    if (dist < self.bounding_attack_distance) {
+                        var attack = N.Meta._(self).cmp<Attack>(true);
+                        if (attack != null) {
+                            attack.apply(self.target);
+                        }
                     }
                 }
             }
@@ -93,6 +95,9 @@ namespace GGJ {
 
         /** Currently visible? */
         public bool visible;
+
+        /** How long have we been invisible? */
+        private float _idle_timer = 0f;
 
         /** Bounding attack distance to hit players */
         public float bounding_attack_distance = 4f;
@@ -130,6 +135,15 @@ namespace GGJ {
                 _idle = 0;
                 var render = N.Meta._(this).cmp<SpriteRenderer>();
                 this.visible = render.isVisible;
+            }
+
+            // If not visible, add timeer
+            if (!this.visible) {
+                _idle_timer += Time.deltaTime;
+                if (_idle_timer > 5f) {
+                    N.Console.log("Destroying abandoned monster");
+                    N.Meta._(this).destroy();
+                }
             }
 
             // Update brain state
