@@ -67,7 +67,11 @@ public class UpdateControllerConnectedText : MonoBehaviour
 
     private void CheckReadyState()
     {
-		if ((gc.NumberOfPlayers == InputManager.Devices.Count) && (gc.NumberOfPlayers > 0))
+		if (
+              ((gc.NumberOfPlayers == InputManager.Devices.Count) && (keyboardEnabled)) ||
+              ((gc.NumberOfPlayers == InputManager.Devices.Count - 1) && (!keyboardEnabled)) &&
+              (gc.NumberOfPlayers > 0)
+           )
 		{
 			startTime = Time.time + 5.0f;
 		}
