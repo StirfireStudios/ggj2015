@@ -43,6 +43,7 @@ namespace GGJ {
                     time_since_spawn += Time.deltaTime;
                     if (time_since_spawn > timer) {
                         _spawnMonster();
+                        time_since_spawn = 0;
                     }
                 }
                 else {
