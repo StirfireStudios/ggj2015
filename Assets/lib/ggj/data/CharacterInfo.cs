@@ -25,6 +25,7 @@ namespace GGJ.Data
 			CharacterInfo charInfo = new CharacterInfo();
 			charInfo.Name = "Designation 442";
 			charInfo.CharacterType = Type.Robot;
+            charInfo.PortraitResource = "Sprites/Robot/Head_Guy";
             charInfo.SpriteResource = "SpriterObjects/Robot";
 			return charInfo;
 		}
@@ -34,6 +35,7 @@ namespace GGJ.Data
 			CharacterInfo charInfo = new CharacterInfo();
 			charInfo.Name = "Mara Quinn";
             charInfo.CharacterType = Type.MaraQuinn;
+            charInfo.PortraitResource = "Sprites/Mara/Head_Guy";
             charInfo.SpriteResource = "SpriterObjects/MaraQuinn";
 			return charInfo;
 		}
@@ -43,6 +45,7 @@ namespace GGJ.Data
 			CharacterInfo charInfo = new CharacterInfo();
 			charInfo.Name = "Chelsea Jackson";
             charInfo.CharacterType = Type.ChelseaJackson;
+            charInfo.PortraitResource = "Sprites/Chelsea/Head_Guy";
             charInfo.SpriteResource = "SpriterObjects/ChelseaJackson";
 			return charInfo;
 		}
