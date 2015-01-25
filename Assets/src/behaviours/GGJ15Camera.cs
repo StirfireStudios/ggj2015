@@ -10,6 +10,8 @@ public class GGJ15Camera : MonoBehaviour {
     private float _horizsafearea = 0.45f;
     public float HorizontalSafeArea = 0.9f;
 
+    public float ScrollSpeed = 8.5f;
+
     public float MaxOrthoUnzoomFactor = 1.25f;
     public float ZoomSpeed = 3.5f;
 
@@ -150,10 +152,10 @@ public class GGJ15Camera : MonoBehaviour {
             (CentroidCenter.x * ScreenSizeInvFactors.x) - 0.5f,
             0.0f,
             0.0f// (CentroidCenter.y * ScreenSizeInvFactors.y) - 0.5f
-        ).normalized;
+        );
         Debug.DrawLine(
             transform.position,
-            transform.position + (4.0f * CentroidCenterN),
+            transform.position + (4.0f * CentroidCenterN.normalized),
             Color.green
         );
 
@@ -164,7 +166,7 @@ public class GGJ15Camera : MonoBehaviour {
             bool ScrollXNeg = (NecessaryScroll & Scroll.XNegative) == Scroll.XNegative;
 
             // move the camera!
-            transform.Translate(CentroidCenterN * Time.deltaTime * 2.0f);
+            transform.Translate(CentroidCenterN * Time.deltaTime * ScrollSpeed * Mathf.Abs(CentroidCenterN.x * 6f));
 
             if (ScrollXPos && ScrollXNeg)
             {
