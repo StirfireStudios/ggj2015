@@ -90,7 +90,7 @@ namespace GGJ.Actions {
 
                         // If carrying a box, throw it to jump
                         if (character.box != null) {
-                            N.Meta._(character.box).cmp<Box>().dispose(this.gameObject);
+                            N.Meta._(character.box).cmp<Box>().dispose(this.gameObject, character.flipped);
                             character.box = null;
                         }
                     }

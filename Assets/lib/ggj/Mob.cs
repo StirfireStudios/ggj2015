@@ -138,7 +138,9 @@ namespace GGJ {
         public void damage(float damage) {
             var blips = gameObject.GetComponentsInChildren<DamageBlip>();
             for (var i = 0; i < blips.Length; ++i) {
-                blips[i].activate();
+                if (this.alive) {
+                    blips[i].activate();
+                }
             }
             this.hp -= damage;
             if (hp <= 0) {
