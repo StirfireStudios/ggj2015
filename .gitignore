@@ -3,6 +3,7 @@ Library
 Library/*
 *.csproj
 *.sln
+*.suo
 *.unityproj
 *.userprefs
 Temp
@@ -10,3 +11,8 @@ Temp
 Build
 Synced Assets
 targets
+Assets/lib/InControl
+Assets/lib/InControl/*
+Assets/lib/UnityVS
+Assets/lib/UnityVS/*
+obj
