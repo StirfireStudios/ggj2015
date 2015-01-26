@@ -64,7 +64,7 @@ namespace GGJ {
         // We're delivering a box!
         public void deliver(GameObject root) {
             gameObject.SetActive(true);
-            dispose(root);
+            dispose(root, true);
         }
     }
 }
