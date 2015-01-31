@@ -93,6 +93,13 @@ public class GGJ15Camera : MonoBehaviour {
             {
                 text.SendMessage("Trigger");
             }
+        } else if (GGJ.GameConfig.Instance.BoxesReturned.Count >= PlayersByIdx.Count)
+        {
+            GameObject text = GameObject.Find("Game Win");
+            if (text != null)
+            {
+                text.SendMessage("Trigger");
+            }
         }
 
         CentroidCenter = Vector2.zero;
