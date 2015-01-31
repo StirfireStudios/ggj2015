@@ -43,7 +43,7 @@ namespace GGJ.Actions {
                     }
                 }
             }
-            else if (_active && (this.transform.localPosition.y < _deathY))
+            else if ((this.transform.localPosition.y < _deathY))
             {
                 this.apply();
             }
