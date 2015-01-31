@@ -66,6 +66,9 @@ public class CharacterSelectManager : MonoBehaviour {
 	}
 
 	private void SetCharacter(int index) {
+        if (characterReady)
+            return;
+
 		if ((index < 0) || (index >= characters.Count)) {
 			return;
 		}

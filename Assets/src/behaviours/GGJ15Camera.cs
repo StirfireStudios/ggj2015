@@ -83,9 +83,24 @@ public class GGJ15Camera : MonoBehaviour {
         if (!bAlive)
             return;
 
-        // Only care about active players.
-        KeyValuePair<int, GameObject>[] ActivePlayers = PlayersByIdx.Where(kvp => kvp.Value.activeInHierarchy).ToArray();
+        // Only care about alive players.
+        KeyValuePair<int, GameObject>[] ActivePlayers = PlayersByIdx.Where(kvp => kvp.Value.GetComponent<GGJ.Mob>().alive).ToArray();
         CentroidInvFactor = 1f / (float)ActivePlayers.Count();
+        if (ActivePlayers.Count() < 1)
+        {
+            GameObject text = GameObject.Find("Game Over");
+            if (text != null)
+            {
+                text.SendMessage("Trigger");
+            }
+        } else if (GGJ.GameConfig.Instance.BoxesReturned.Count >= PlayersByIdx.Count)
+        {
+            GameObject text = GameObject.Find("Game Win");
+            if (text != null)
+            {
+                text.SendMessage("Trigger");
+            }
+        }
 
         CentroidCenter = Vector2.zero;
         CentroidCenterWorld = Vector3.zero;

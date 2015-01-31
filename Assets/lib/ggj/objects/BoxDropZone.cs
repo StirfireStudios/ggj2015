@@ -30,10 +30,17 @@ namespace GGJ
                 if (CharacterHasBox)
                 {
                     N.Meta._(character.box).cmp<Box>().deliver(character.gameObject);
+                    cfg.BoxesReturned.Add(character.box);
+                    Debug.Log(
+                        String.Format(
+                            "Box being delivered! Boxes delivered: {0}",
+                            cfg.BoxesReturned.Count()
+                        )
+                    );
                     character.box = null;
                 }
             }
-            else if (box != null)
+/*            else if (box != null)
             {
                 cfg.BoxesReturned.Add(other.gameObject);
 
