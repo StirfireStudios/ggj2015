@@ -86,6 +86,14 @@ public class GGJ15Camera : MonoBehaviour {
         // Only care about alive players.
         KeyValuePair<int, GameObject>[] ActivePlayers = PlayersByIdx.Where(kvp => kvp.Value.GetComponent<GGJ.Mob>().alive).ToArray();
         CentroidInvFactor = 1f / (float)ActivePlayers.Count();
+        if (ActivePlayers.Count() < 1)
+        {
+            GameObject text = GameObject.Find("Game Over");
+            if (text != null)
+            {
+                text.SendMessage("Trigger");
+            }
+        }
 
         CentroidCenter = Vector2.zero;
         CentroidCenterWorld = Vector3.zero;
