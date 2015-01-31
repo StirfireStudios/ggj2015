@@ -31,7 +31,7 @@ public class UpdateCharacterSelect : MonoBehaviour
 
     public void Update()
     {
-        if (keyboardOn)
+        if (keyboardOn && keyboard != null)
         {
             if (keyboard.Action2)
             {
