@@ -84,7 +84,7 @@ public class GGJ15Camera : MonoBehaviour {
             return;
 
         // Only care about active players.
-        KeyValuePair<int, GameObject>[] ActivePlayers = PlayersByIdx.Where(kvp => kvp.Value.activeInHierarchy).ToArray();
+        KeyValuePair<int, GameObject>[] ActivePlayers = PlayersByIdx.Where(kvp => kvp.Value.GetComponent<GGJ.Mob>().alive).ToArray();
         CentroidInvFactor = 1f / (float)ActivePlayers.Count();
 
         CentroidCenter = Vector2.zero;
