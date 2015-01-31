@@ -20,6 +20,9 @@ namespace GGJ.Actions {
         /** Idle animation threshold */
         private float _threshold = 0.5f;
 
+        /** Death plane **/
+        private float _deathY = -20.0f;
+
         public void Start() {
             _idle = 0f;
             _idle_death = 0f;
@@ -27,15 +30,22 @@ namespace GGJ.Actions {
 
         public void Update() {
             var anim = N.Meta._(this).cmp<Animator>();
-            if (_active && (!anim.IsInTransition(0))) {
+            if (_active && (!anim.IsInTransition(0)))
+            {
                 _idle += Time.deltaTime;
-                if (_idle > this._threshold) {
+                if (_idle > this._threshold)
+                {
                     _idle_death += Time.deltaTime;
-                    if (_idle_death > idle_death) {
+                    if (_idle_death > idle_death)
+                    {
                         _active = false;
-                        N.Meta._(this).destroy();
+                        this.active = false;
                     }
                 }
+            }
+            else if (_active && (this.transform.localPosition.y < _deathY))
+            {
+                this.apply();
             }
         }
 
