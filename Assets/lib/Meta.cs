@@ -77,7 +77,7 @@ namespace N {
 
     /// Set the shader on an object
     public Shader shader {
-      set { this._g.renderer.material.shader = value; }
+      set { this._g.GetComponent<Renderer>().material.shader = value; }
     }
 
     /// Turn rendering on or off for object
@@ -88,9 +88,9 @@ namespace N {
     /// Apply opacity value to given object instance
     public float opacity {
       set {
-        var c = this._g.renderer.material.color;
+        var c = this._g.GetComponent<Renderer>().material.color;
         c.a = value;
-        this._g.renderer.material.color = c;
+        this._g.GetComponent<Renderer>().material.color = c;
       }
     }
 
@@ -107,11 +107,11 @@ namespace N {
     /// Apply opacity value to given object instance
     public float brightness {
       set {
-        var c = this._g.renderer.material.color;
+        var c = this._g.GetComponent<Renderer>().material.color;
         c.r = value;
         c.g = value;
         c.b = value;
-        this._g.renderer.material.color = c;
+        this._g.GetComponent<Renderer>().material.color = c;
       }
     }
 
@@ -123,12 +123,12 @@ namespace N {
 
     /// Apply opacity value to given object instance
     public Meta color(float r, float g, float b, float a) {
-      var c = this._g.renderer.material.color;
+      var c = this._g.GetComponent<Renderer>().material.color;
       c.r = r;
       c.g = g;
       c.b = b;
       c.a = a;
-      this._g.renderer.material.color = c;
+      this._g.GetComponent<Renderer>().material.color = c;
       return this;
     }
 

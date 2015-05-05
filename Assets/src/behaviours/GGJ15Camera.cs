@@ -56,7 +56,7 @@ public class GGJ15Camera : MonoBehaviour {
         );
         ScreenCenter = ScreenSize * 0.5f;
 
-        OrthoSizeInitial = camera.orthographicSize;
+        OrthoSizeInitial = GetComponent<Camera>().orthographicSize;
 
 	}
 
@@ -110,7 +110,7 @@ public class GGJ15Camera : MonoBehaviour {
         {
             // Debug.Log(string.Format("{0}\t{1}", kvp.Value.name, gameObject.camera.WorldToScreenPoint(kvp.Value.transform.position)));
             Vector3 wpoint = kvp.Value.transform.position;
-            Vector3 sspoint = gameObject.camera.WorldToScreenPoint(wpoint);
+            Vector3 sspoint = gameObject.GetComponent<Camera>().WorldToScreenPoint(wpoint);
             
             // Accumulate the centroid (which I guess we'll have be raw for now?)
             CentroidCenterWorld += wpoint;
@@ -166,22 +166,22 @@ public class GGJ15Camera : MonoBehaviour {
             if (ScrollXPos && ScrollXNeg)
             {
                 // hrrrrrrm, a zoom might be necessary.                
-                if (!Mathf.Approximately(camera.orthographicSize, OrthoSizeInitial * MaxOrthoUnzoomFactor)) {
-                    UpdateScreenSize(camera.orthographicSize + (ZoomSpeed * Time.deltaTime));
+                if (!Mathf.Approximately(GetComponent<Camera>().orthographicSize, OrthoSizeInitial * MaxOrthoUnzoomFactor)) {
+                    UpdateScreenSize(GetComponent<Camera>().orthographicSize + (ZoomSpeed * Time.deltaTime));
                     Debug.Log("A");
                 }
             }
             else
             {
-                if (!Mathf.Approximately(camera.orthographicSize, OrthoSizeInitial)) {
-                    UpdateScreenSize(camera.orthographicSize + (-ZoomSpeed * Time.deltaTime));
+                if (!Mathf.Approximately(GetComponent<Camera>().orthographicSize, OrthoSizeInitial)) {
+                    UpdateScreenSize(GetComponent<Camera>().orthographicSize + (-ZoomSpeed * Time.deltaTime));
                     Debug.Log("B");
                 }
             }
         }
         else {
-            if (!Mathf.Approximately(camera.orthographicSize, OrthoSizeInitial)) {
-                UpdateScreenSize(camera.orthographicSize + (-ZoomSpeed * Time.deltaTime));
+            if (!Mathf.Approximately(GetComponent<Camera>().orthographicSize, OrthoSizeInitial)) {
+                UpdateScreenSize(GetComponent<Camera>().orthographicSize + (-ZoomSpeed * Time.deltaTime));
                 Debug.Log("C");
             }
         }
@@ -223,7 +223,7 @@ public class GGJ15Camera : MonoBehaviour {
 
     private void UpdateScreenSize(float f)
     {
-        camera.orthographicSize = Mathf.Clamp(f, OrthoSizeInitial, OrthoSizeInitial * MaxOrthoUnzoomFactor);
+        GetComponent<Camera>().orthographicSize = Mathf.Clamp(f, OrthoSizeInitial, OrthoSizeInitial * MaxOrthoUnzoomFactor);
         ScreenSize.Set(Screen.width, Screen.height);
         ScreenSizeInvFactors.Set(
             1f / ScreenSize.x,
