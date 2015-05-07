@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c080e12d534f64fc48bffb53d9f55fba
+guid: 619a64c546e464ebcb6e77a87e652a56
 TextureImporter:
   fileIDToRecycleName:
     21300000: VirtualButton_Y
@@ -22,6 +22,9 @@ TextureImporter:
   isReadable: 0
   grayScaleToAlpha: 0
   generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
   maxTextureSize: 1024
@@ -32,6 +35,7 @@ TextureImporter:
     wrapMode: 1
   nPOTScale: 0
   lightmap: 0
+  rGBM: 0
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
@@ -47,3 +51,5 @@ TextureImporter:
     sprites: []
   spritePackingTag: 
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 
