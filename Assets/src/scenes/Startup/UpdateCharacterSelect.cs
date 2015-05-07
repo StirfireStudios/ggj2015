@@ -42,7 +42,7 @@ public class UpdateCharacterSelect : MonoBehaviour
         }
         else
         {
-            if (keyboard.Action1)
+            if (keyboard != null && keyboard.Action1)
             {
                 ShowPanel(keyboard);
                 keyboardOn = true;
