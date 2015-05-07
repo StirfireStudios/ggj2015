@@ -4,54 +4,47 @@ using UnityEngine;
 using InControl;
 
 
-namespace GGJ
+namespace CustomProfileExample
 {
 	// This custom profile is enabled by adding it to the Custom Profiles list
 	// on the InControlManager component, or you can attach it yourself like so:
 	// InputManager.AttachDevice( new UnityInputDevice( "KeyboardAndMouseProfile" ) );
-	// 
-    public class KeyboardAndMouseProfile : CustomInputDeviceProfile
+	//
+	public class KeyboardAndMouseProfile : CustomInputDeviceProfile
 	{
 		public KeyboardAndMouseProfile()
 		{
 			Name = "Keyboard/Mouse";
 			Meta = "A keyboard and mouse combination profile appropriate for FPS.";
 
-			// This profile only works on desktops.
-			SupportedPlatforms = new[]
-			{
-				"Windows",
-				"Mac",
-				"Linux"
-			};
-
-			Sensitivity = 1.0f;
-			LowerDeadZone = 0.0f;
-			UpperDeadZone = 1.0f;
-
-			ButtonMappings = new[]
-			{
-				new InputControlMapping
-				{
+			ButtonMappings = new[] {
+				new InputControlMapping {
 					Handle = "Fire - Mouse",
 					Target = InputControlType.Action1,
 					Source = MouseButton0
 				},
-				new InputControlMapping
-				{
+				new InputControlMapping {
 					Handle = "Fire - Keyboard",
 					Target = InputControlType.Action1,
 					// KeyCodeButton fires when any of the provided KeyCode params are down.
 					Source = KeyCodeButton( KeyCode.F, KeyCode.Return )
 				},
-				new InputControlMapping
-				{
+				new InputControlMapping {
 					Handle = "AltFire",
 					Target = InputControlType.Action2,
+					Source = MouseButton2
+				},
+				new InputControlMapping {
+					Handle = "Middle",
+					Target = InputControlType.Action3,
+					Source = MouseButton1
+				},
+				new InputControlMapping {
+					Handle = "Jump",
+					Target = InputControlType.Action4,
 					Source = KeyCodeButton( KeyCode.Space )
 				},
-				new InputControlMapping
-				{
+				new InputControlMapping {
 					Handle = "Combo",
 					Target = InputControlType.LeftBumper,
 					// KeyCodeComboButton requires that all KeyCode params are down simultaneously.
@@ -59,7 +52,7 @@ namespace GGJ
 				},
 			};
 
-            AnalogMappings = new[] {
+			AnalogMappings = new[] {
 				new InputControlMapping {
 					Handle = "Move Up",
 					Target = InputControlType.LeftStickUp,
